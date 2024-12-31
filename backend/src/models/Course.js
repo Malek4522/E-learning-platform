@@ -91,18 +91,20 @@ const chapterSchema = new Schema({
     type: String,
     required: [true, 'Chapter title is required']
   },
-  lessons: [{
-    content: {
-      type: contentSchema,
-      required: true
-    },
-    quiz: {
-      type: quizSchema,
-      required: true
-    }
-  }],
-  required: true,
-  validate: [arr => arr.length >= 1, 'At least one lesson is required']
+  lessons: {
+    type: [{
+      content: {
+        type: contentSchema,
+        required: true
+      },
+      quiz: {
+        type: quizSchema,
+        required: true
+      }
+    }],
+    required: [true, 'At least one lesson is required'],
+    validate: [arr => arr.length >= 1, 'At least one lesson is required']
+  }
 });
 
 // Review Schema

@@ -1,4 +1,4 @@
-const { body, param, validationResult } = require('express-validator');
+const { body, param, cookie,validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const { refreshSecret, options } = require('../config/jwt.config');
 
@@ -31,7 +31,38 @@ const validations = {
 
     return chain;
   },
+  // First name validation
+  first_name: body('firstName')
+    .trim()
+    .notEmpty()
+    .withMessage('First name is required')
+    .isLength({ min: 2, max: 50 })
+    .withMessage('First name must be between 2 and 50 characters')
+    .matches(/^[a-zA-Z\s-']+$/)
+    .withMessage('First name can only contain letters, spaces, hyphens and apostrophes')
+    .escape(),
 
+  // Last name validation  
+  last_name: body('lastName')
+    .trim()
+    .notEmpty()
+    .withMessage('Last name is required')
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Last name must be between 2 and 50 characters')
+    .matches(/^[a-zA-Z\s-']+$/)
+    .withMessage('Last name can only contain letters, spaces, hyphens and apostrophes')
+    .escape(),
+
+  // Card number validation
+  card_number: body('cardNumber')
+    .trim()
+    .notEmpty()
+    .withMessage('Card number is required')
+    .isLength({ min: 1, max: 20 })
+    .withMessage('Card number must be exactly 8 characters')
+    .matches(/^[A-Z0-9]+$/)
+    .withMessage('Card number can only contain uppercase letters and numbers')
+    .escape(),
   // Reset token validation
   resetToken: param('token')
     .trim()
@@ -98,6 +129,9 @@ const validateLogin = [
 const validateRegistration = [
   validations.email,
   validations.password(true),
+  validations.first_name,
+  validations.last_name,
+  validations.card_number,
   handleValidation
 ];
 

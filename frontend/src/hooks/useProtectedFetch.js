@@ -4,15 +4,16 @@ import authService from '../services/AuthService';
 const useProtectedFetch = (url) => {
   const [data, setData] = useState(null);
   const [status, setStatus] = useState({ type: null, message: null });
-  const [debugInfo, setDebugInfo] = useState({ req: null, res: null, statusCode: null });
 
   const fetchData = async () => {
     const token = authService.getAccessToken();
+    if (!token) {
+      window.location.href = '/login';
+      return;
+    }
     const reqHeaders = {
       Authorization: `Bearer ${token}`,
     };
-
-    setDebugInfo(prev => ({ ...prev, req: { headers: reqHeaders } }));
 
     try {
       const response = await fetch(url, { headers: reqHeaders });
@@ -34,7 +35,6 @@ const useProtectedFetch = (url) => {
       }
 
       const data = await response.json();
-      setDebugInfo(prev => ({ ...prev, res: data, statusCode: response.status }));
 
       if (response.ok) {
         setData(data);
@@ -43,7 +43,6 @@ const useProtectedFetch = (url) => {
         setStatus({ type: 'error', message: data.message || 'Failed to fetch data' });
       }
     } catch (error) {
-      setDebugInfo(prev => ({ ...prev, res: { error: error.message } }));
       setStatus({ type: 'error', message: 'Error fetching data: ' + error.message });
     }
   };
@@ -52,7 +51,7 @@ const useProtectedFetch = (url) => {
     fetchData();
   }, [url]);
 
-  return { data, status, debugInfo };
+  return { data, status };
 };
 
 export default useProtectedFetch; 

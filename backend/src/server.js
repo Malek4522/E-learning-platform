@@ -1,12 +1,11 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const connectDB = require('./config/database');
 const routes = require('./routes/index');
-
-// Load environment variables
-dotenv.config();
+const cookieParser = require('cookie-parser');
 
 // Connect to Database
 connectDB();
@@ -18,9 +17,11 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('src/public'));
+app.use(cookieParser());
+
 
 // Routes
-app.use('/', routes);
+app.use('/api', routes);
 
 // Serve static files
 app.use(express.static('src/public'));

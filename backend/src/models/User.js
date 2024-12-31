@@ -28,10 +28,20 @@ const profileSchema = new mongoose.Schema({
 
 // Define the main user schema
 const userSchema = new mongoose.Schema({
+  card_number: {
+    type: Number,
+    trim: true,
+    required: [true, 'Card number is required'],
+    validate: {
+      validator: function(v) {
+        return Number.isInteger(v) && v > 0;
+      },
+      message: props => `${props.value} is not a valid number`
+    }
+  },
   email: {
     type: String,
     required: true,
-    unique: true,
     trim: true,
     lowercase: true
   },
@@ -82,7 +92,8 @@ const userSchema = new mongoose.Schema({
 });
 
 // Create indexes
-userSchema.index({ email: 1 });
+userSchema.index({ email: 1 }, { unique: true }); 
+userSchema.index({ card_number: 1 }, { unique: true }); 
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {

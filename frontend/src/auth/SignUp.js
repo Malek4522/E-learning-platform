@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../landing/components/Navbar';
 import styles from './SignUp.module.css'; // Import the CSS module
+import axios from 'axios';
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -23,12 +24,17 @@ function SignUp() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Mock sign up logic - replace with actual authentication logic
     if (formData.password === formData.confirmPassword) {
-      localStorage.setItem('user', JSON.stringify({ email: formData.email }));
-      navigate('/');
+      try {
+        const response = await axios.post('/api/v1/auth/register', formData);
+        
+        // Registration successful
+        navigate('/login');
+      } catch (error) {
+        alert(error.response?.data?.message || 'Registration failed');
+      }
     } else {
       alert('Passwords do not match');
     }

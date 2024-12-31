@@ -10,12 +10,12 @@ const progressRoutes = require('./progress.routes');
 const userRoutes = require('./user.routes');
 
 // API Routes
-router.use('/api/v1/auth', authRoutes);
-router.use('/api/v1/admin', adminRoutes);
-router.use('/api/v1/courses', courseRoutes);
-router.use('/api/v1/forums', forumRoutes);
-router.use('/api/v1/progress', progressRoutes);
-router.use('/api/v1/users', userRoutes);
+router.use('/v1/auth', authRoutes);
+router.use('/v1/admin', adminRoutes);
+router.use('/v1/courses', courseRoutes);
+router.use('/v1/forums', forumRoutes);
+router.use('/v1/progress', progressRoutes);
+router.use('/v1/users', userRoutes);
 
 // Health check endpoint
 router.get('/health', (req, res) => {

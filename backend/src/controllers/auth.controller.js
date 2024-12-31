@@ -16,7 +16,7 @@ const generateTokens = (user) => {
   // Generate a unique JWT ID
   const jwtid = crypto.randomBytes(16).toString('hex');
   
-  const accessToken = sign(
+  const accessToken = jwt.sign(
     { 
       id: user._id, 
       role: user.role,
@@ -31,7 +31,7 @@ const generateTokens = (user) => {
     }
   );
 
-  const refreshToken = sign(
+  const refreshToken = jwt.sign(
     { 
       id: user._id,
       role: user.role,
@@ -131,7 +131,7 @@ const authController = {
   // Register new student
   register: async (req, res) => {
     try {
-      const { email, password } = req.body;
+      const { email, password,cardNumber,firstName,lastName} = req.body;
 
       // Check if user already exists
       const existingUser = await User.findOne({ email });
@@ -141,6 +141,11 @@ const authController = {
 
       // Create new user
       const user = new User({
+        card_number : cardNumber,
+        profile: {
+          first_name : firstName,
+          last_name : lastName
+        },
         email,
         password,
         role: 'student'

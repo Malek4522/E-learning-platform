@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const forumController = require('../controllers/forum.controller');
-const authMiddleware = require('../middleware/auth.middleware');
+const {authenticate} = require('../middleware/auth.middleware');
 
 // Apply auth middleware to all routes
-router.use(authMiddleware);
+router.use(authenticate);
 
 router.post('/', forumController.createForum);
 router.get('/:courseId', forumController.getForumByCourse);
