@@ -22,7 +22,7 @@ function Login() {
       localStorage.setItem('accessToken', response.data.accessToken);
       
       // Redirect to the intended page or default to home
-      const redirectTo = '/courses';
+      const redirectTo = '/';
       navigate(redirectTo);
     } catch (error) {
       alert(error.response?.data?.message || 'Login failed');
