@@ -1,0 +1,44 @@
+.admin-app .dashboard {
+    display: flex;
+  }
+  
+  .admin-app .main-content {
+    flex: 1;
+    background: #f5f7fa;
+    padding: 40px;
+    overflow-y: auto;
+    margin-top: 70px;
+  }
+  
+  .admin-app .dashboard-welcome {
+    margin-bottom: 30px;
+    padding: 0 20px;
+  }
+  
+  .admin-app .dashboard-welcome h1 {
+    font-size: 1.8rem;
+    color: #333;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+  }
+  
+  .admin-app .dashboard-welcome p {
+    color: #666;
+    font-size: 1rem;
+    margin: 0;
+  }
+  
+  .admin-app .content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    margin-top: 20px;
+  }
+  
+  .admin-app .student-table,
+  .admin-app .course-table-container,
+  .admin-app .instructor-table-container {
+    margin-top: 20px;
+  }
+  

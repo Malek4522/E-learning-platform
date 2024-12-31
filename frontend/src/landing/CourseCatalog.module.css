@@ -1,0 +1,90 @@
+.courseCatalog {
+  padding-top: 90px; /* Increased padding to account for navbar height */
+  padding: 90px 2rem 2rem 2rem; /* Combined padding */
+  text-align: center;
+  background: #f4f6f8;
+  min-height: 100vh;
+}
+
+.courseCatalog h1 {
+  font-size: 2rem; /* Reduced font size */
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.courseList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.courseCard {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 220px; /* Adjusted smaller width for cards */
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.courseCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.courseCard img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 0.8rem; /* Slightly reduced spacing */
+}
+
+.courseInfo {
+  text-align: center;
+}
+
+.courseCard h2 {
+  font-size: 1rem; /* Reduced font size */
+  margin-bottom: 0.4rem; /* Reduced margin */
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.courseCard p {
+  font-size: 0.8rem; /* Reduced font size */
+  margin-bottom: 0.4rem;
+  color: #34495e;
+}
+
+.courseMeta {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0.8rem; /* Slightly reduced spacing */
+  color: #666;
+}
+
+.courseMeta span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem; /* Reduced spacing between items */
+}
+
+.enrollButton {
+  padding: 0.4rem 0.8rem; /* Adjusted padding */
+  background: #ff4081; /* Pink */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.8rem; /* Reduced font size */
+  transition: background 0.3s;
+}
+
+.enrollButton:hover {
+  background: #e91e63; /* Darker pink */
+}

@@ -1,0 +1,87 @@
+.teacher-app .lesson-discussions {
+  margin-top: 32px;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.teacher-app .discussions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.teacher-app .discussion-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.teacher-app .discussion-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.teacher-app .author {
+  font-weight: 600;
+  color: #2196f3;
+}
+
+.teacher-app .timestamp {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.teacher-app .discussion-text {
+  color: #1e293b;
+  margin-bottom: 16px;
+}
+
+.teacher-app .replies-section {
+  margin-left: 24px;
+  padding-left: 24px;
+  border-left: 2px solid #e2e8f0;
+}
+
+.teacher-app .reply-item {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.teacher-app .teacher-reply {
+  background: #e3f2fd;
+  border-left: 3px solid #2196f3;
+}
+
+.teacher-app .reply-input {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.teacher-app .reply-input textarea {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.teacher-app .reply-input button {
+  padding: 8px 16px;
+  background: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  height: fit-content;
+}
+
+.teacher-app .reply-input button:hover {
+  background: #1976d2;
+}

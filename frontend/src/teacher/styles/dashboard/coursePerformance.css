@@ -1,0 +1,157 @@
+.course-performance {
+  padding: 1.5rem;
+}
+
+.performance-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.metric-card h3 {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0.5rem 0;
+}
+
+.trend {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.trend.positive {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.trend.negative {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.rating-stars {
+  color: #ffc107;
+  font-size: 1.2rem;
+}
+
+.rating-stars .filled {
+  color: #ffc107;
+}
+
+.performance-details {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.course-metrics {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.metrics-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.metrics-table th,
+.metrics-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.metrics-table th {
+  font-weight: 500;
+  color: #666;
+}
+
+.progress-bar {
+  width: 100px;
+  height: 6px;
+  background: #f0f0f0;
+  border-radius: 3px;
+  position: relative;
+}
+
+.progress {
+  height: 100%;
+  background: #1976d2;
+  border-radius: 3px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.rating i {
+  color: #ffc107;
+}
+
+.recent-activity {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.activity-list {
+  margin-top: 1rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.activity-icon.enrollment {
+  background: #1976d2;
+}
+
+.activity-icon.completion {
+  background: #4caf50;
+}
+
+.activity-details p {
+  margin: 0;
+}
+
+.activity-date {
+  font-size: 0.875rem;
+  color: #666;
+} 

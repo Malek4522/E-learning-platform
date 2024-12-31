@@ -1,0 +1,110 @@
+Sidebar Styles .student-app .sidebar {
+  width: 250px;
+  background: #f8f9fc;
+  padding: 20px;
+  height: calc(100vh - 70px);
+  border-right: 1px solid #e0e0e0;
+  position: fixed;
+  left: 0;
+  top: 70px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.student-app .menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.student-app .sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #666;
+  border-left: 4px solid transparent;
+  margin-bottom: 5px;
+}
+
+/* Hover state */
+.student-app .sidebar-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Active state */
+.student-app .sidebar-item.active {
+  background-color: rgba(0, 0, 0, 0.05);
+  font-weight: 500;
+}
+
+.student-app .sidebar-item span {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+/* Active text color */
+.student-app .sidebar-item.active span {
+  color: #333;
+}
+
+.student-app .sidebar-icon {
+  font-size: 1.8rem;
+  margin-right: 10px;
+}
+
+/* Default icon colors for each item */
+.student-app .sidebar-item:nth-child(1) .sidebar-icon {
+  color: #4caf50;
+}
+
+.student-app .sidebar-item:nth-child(2) .sidebar-icon {
+  color: #2196f3;
+}
+
+.student-app .sidebar-item:nth-child(3) .sidebar-icon {
+  color: #ff6b6b;
+}
+
+.student-app .sidebar-item:nth-child(4) .sidebar-icon {
+  color: #ffa726;
+}
+
+.student-app .sidebar-item:nth-child(5) .sidebar-icon {
+  color: #9c27b0;
+}
+
+/* Hover states for icons */
+.student-app .sidebar-item:hover .sidebar-icon {
+  filter: brightness(0.85);
+}
+
+/* Active states for icons */
+.student-app .sidebar-item.active:nth-child(1) .sidebar-icon {
+  color: #4caf50;
+}
+
+.student-app .sidebar-item.active:nth-child(2) .sidebar-icon {
+  color: #2196f3;
+}
+
+.student-app .sidebar-item.active:nth-child(3) .sidebar-icon {
+  color: #ff6b6b;
+}
+
+.student-app .sidebar-item.active:nth-child(4) .sidebar-icon {
+  color: #ffa726;
+}
+
+.student-app .sidebar-item.active:nth-child(5) .sidebar-icon {
+  color: #9c27b0;
+}
+
+/* Main content spacing */
+.student-app .main-content {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  min-height: calc(100vh - 70px);
+  padding: 0;
+}

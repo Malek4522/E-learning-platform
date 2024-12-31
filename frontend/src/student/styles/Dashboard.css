@@ -1,0 +1,206 @@
+.student-app .dashboard {
+  padding: 40px;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+.student-app .dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 60px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(92, 199, 42, 0.1);
+}
+
+.student-app .dashboard-header h1 {
+  font-size: 28px;
+  background: linear-gradient(to right, #2196f3, #0d47a1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+  position: relative;
+}
+
+.student-app .dashboard-header h1::after {
+  content: "👋";
+  position: absolute;
+  margin-left: 10px;
+  -webkit-text-fill-color: initial;
+}
+
+.student-app .date {
+  color: #2196f3;
+  font-size: 15px;
+  background: rgba(33, 150, 243, 0.1);
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.student-app .dashboard-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.student-app .new-lessons-section {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(33, 150, 243, 0.1);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(33, 150, 243, 0.1);
+}
+
+.student-app .new-lessons-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, #2196f3, #0d47a1);
+}
+
+.student-app h2 {
+  font-size: 20px;
+  color: #2196f3;
+  margin-bottom: 25px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.student-app .lessons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.student-app .lessons-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.student-app .lessons-list::-webkit-scrollbar-track {
+  background: rgba(33, 150, 243, 0.1);
+  border-radius: 3px;
+}
+
+.student-app .lessons-list::-webkit-scrollbar-thumb {
+  background: rgba(33, 150, 243, 0.3);
+  border-radius: 3px;
+}
+
+.student-app .lesson-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(33, 150, 243, 0.1);
+}
+
+.student-app .lesson-item:hover {
+  background: rgba(33, 150, 243, 0.03);
+  border-color: rgba(33, 150, 243, 0.2);
+}
+
+.student-app .lesson-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  background: linear-gradient(135deg, #2196f3, #0d47a1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+
+.student-app .lesson-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.student-app .lesson-details h4 {
+  font-size: 16px;
+  color: #1e293b;
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.student-app .lesson-details p {
+  font-size: 14px;
+  color: #2196f3;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.student-app .added-time {
+  font-size: 12px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.student-app .empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #5cc72a;
+}
+
+.student-app .empty-state img {
+  width: 200px;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+.student-app .go-to-lesson-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  background: linear-gradient(135deg, #2196f3, #0d47a1);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.8;
+  margin-left: auto;
+}
+
+.student-app .go-to-lesson-btn:hover {
+  opacity: 1;
+  transform: translateX(3px);
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+}
+
+.student-app .go-to-lesson-btn i {
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .student-app .dashboard {
+    padding: 20px;
+  }
+
+  .student-app .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 40px;
+  }
+}

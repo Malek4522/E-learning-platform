@@ -1,0 +1,117 @@
+/* Sidebar Styles */
+.admin-app .sidebar {
+  width: 250px;
+  background: #f8f9fc;
+  padding: 20px;
+  height: calc(100vh - 70px);
+  border-right: 1px solid #e0e0e0;
+  position: fixed;
+  left: 0;
+  top: 70px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.admin-app .logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #1976d2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-app .menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-app .menu li {
+  cursor: pointer;
+  padding: 10px 15px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  background-color: #f8f9fc;
+  transition: background-color 0.3s ease;
+}
+
+.admin-app .sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #666;
+  border-left: 4px solid transparent;
+}
+
+.admin-app .sidebar-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.admin-app .sidebar-item.active {
+  background-color: rgba(0, 0, 0, 0.05);
+  font-weight: 500;
+}
+
+.admin-app .sidebar-item span {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.admin-app .sidebar-item.active span {
+  color: #333;
+}
+
+.admin-app .main-content {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  min-height: calc(100vh - 70px);
+  padding: 0;
+}
+
+.admin-app .sidebar-icon {
+  font-size: 1.8rem;
+  margin-right: 10px;
+}
+
+/* Default colors for each icon */
+.admin-app .sidebar-item:nth-child(1) .sidebar-icon {
+  color: #4caf50;
+}
+
+.admin-app .sidebar-item:nth-child(2) .sidebar-icon {
+  color: #2196f3;
+}
+
+.admin-app .sidebar-item:nth-child(3) .sidebar-icon {
+  color: #ff6b6b;
+}
+
+.admin-app .sidebar-item:nth-child(4) .sidebar-icon {
+  color: #ffa726;
+}
+
+/* Hover states */
+.admin-app .sidebar-item:hover .sidebar-icon {
+  filter: brightness(0.85);
+}
+
+/* Active states */
+.admin-app .sidebar-item.active:nth-child(1) {
+  border-left-color: #4caf50;
+}
+
+.admin-app .sidebar-item.active:nth-child(2) {
+  border-left-color: #2196f3;
+}
+
+.admin-app .sidebar-item.active:nth-child(3) {
+  border-left-color: #ff6b6b;
+}
+
+.admin-app .sidebar-item.active:nth-child(4) {
+  border-left-color: #ffa726;
+}

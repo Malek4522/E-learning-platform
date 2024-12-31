@@ -1,0 +1,78 @@
+.courseCard {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  width: 200px; /* Adjusted width to make the card smaller */
+  margin: 1rem;
+}
+
+.courseCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.courseThumbnail {
+  position: relative;
+  height: 120px; /* Adjusted height to make the card smaller */
+  overflow: hidden;
+}
+
+.courseThumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.courseOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+
+.courseContent {
+  padding: 1rem;
+}
+
+.courseContent h3 {
+  font-size: 1rem; /* Adjusted font size to make the card smaller */
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.courseFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.courseProgress {
+  width: 100%;
+}
+
+.progressBar {
+  background: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.progress {
+  background: #1976d2;
+  height: 100%;
+}
+
+.courseProgress span {
+  font-size: 0.8rem; /* Adjusted font size to make the card smaller */
+  color: #666;
+}

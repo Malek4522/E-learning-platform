@@ -1,0 +1,173 @@
+.admin-app .instructor-table-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-app .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.admin-app .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-app .header-left h2 {
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.admin-app .header-left p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+    padding: 4px 8px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.admin-app .instructor-count {
+    display: none;
+}
+
+.admin-app .header-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.admin-app .search-bar {
+    position: relative;
+}
+
+.admin-app .search-bar input {
+    padding: 8px 12px;
+    padding-right: 35px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 250px;
+    font-size: 0.9rem;
+}
+
+.admin-app .search-bar i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+}
+
+.admin-app .add-instructor-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+    height: 36px;
+}
+
+.admin-app .add-instructor-btn:hover {
+    background-color: #1565c0;
+}
+
+.admin-app .instructor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.admin-app .instructor-table th,
+.admin-app .instructor-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.admin-app .instructor-table th {
+    font-weight: 600;
+    color: #666;
+    background-color: #f8f9fa;
+}
+
+.admin-app .instructor-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.admin-app .actions-cell {
+    display: flex;
+    gap: 8px;
+}
+
+.admin-app .edit-btn, 
+.admin-app .delete-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.admin-app .edit-btn {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.admin-app .edit-btn:hover {
+    background-color: #bbdefb;
+}
+
+.admin-app .delete-btn {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.admin-app .delete-btn:hover {
+    background-color: #ffcdd2;
+}
+
+.admin-app .pagination {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .admin-app .table-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .admin-app .header-right {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .admin-app .search-bar {
+        width: 100%;
+    }
+
+    .admin-app .search-bar input {
+        width: 100%;
+    }
+
+    .admin-app .add-instructor-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+  

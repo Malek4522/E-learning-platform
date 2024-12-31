@@ -1,0 +1,149 @@
+.student-app .courses-page {
+  padding: 30px;
+  width: 100%;
+}
+
+.student-app .courses-wrapper {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.student-app .courses-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding: 10px;
+}
+
+.student-app .course-card {
+  flex: 0 0 300px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.student-app .course-image {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: #f5f5f5;
+}
+
+.student-app .course-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 20px;
+}
+
+.student-app .course-stats {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.student-app .course-stats span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.student-app .course-info {
+  padding: 20px;
+}
+
+.student-app .course-info h3 {
+  margin: 0 0 15px;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Header styles */
+.student-app .courses-header {
+  margin-bottom: 30px;
+}
+
+.student-app h2 {
+  font-size: 24px;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.student-app .courses-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-top: 20px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.student-app .enrollment-section {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  height: 40px;
+  width: 100%;
+}
+
+.student-app .enrollment-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  height: 100%;
+}
+
+.student-app .enroll-button {
+  padding: 8px 16px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .student-app .courses-grid {
+    justify-content: center;
+  }
+
+  .student-app .course-card {
+    flex: 0 0 calc(33.333% - 20px);
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .student-app .course-card {
+    flex: 0 0 100%;
+    max-width: 400px;
+  }
+
+  .student-app .courses-actions {
+    flex-direction: column;
+  }
+
+  .student-app .enrollment-section {
+    width: 100%;
+  }
+}

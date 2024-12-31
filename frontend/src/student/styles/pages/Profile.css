@@ -1,0 +1,146 @@
+.student-app .profile-page {
+  padding: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.student-app .profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+  gap: 24px;
+}
+
+.student-app .profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.student-app .avatar-initials {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.student-app .profile-info {
+  flex-grow: 1;
+}
+
+.student-app .profile-info h1 {
+  margin: 0;
+  color: #2d3748;
+  font-size: 1.8rem;
+}
+
+.student-app .profile-info p {
+  margin: 8px 0 0;
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+.student-app .profile-btn {
+  padding: 8px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.student-app .edit-btn {
+  background: #3182ce;
+  color: white;
+}
+
+.student-app .edit-btn:hover {
+  background: #2c5282;
+}
+
+.student-app .done-btn {
+  background: #4caf50;
+  color: white;
+}
+
+.student-app .done-btn:hover {
+  background: #43a047;
+}
+
+.student-app .profile-form {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.student-app .form-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.student-app .form-group {
+  flex: 1;
+}
+
+.student-app .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.student-app .input-with-icon {
+  position: relative;
+}
+
+.student-app .input-with-icon input,
+.student-app .input-with-icon select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #f8fafc;
+}
+
+.student-app .edit-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  cursor: pointer;
+}
+
+.student-app .input-with-icon input:disabled,
+.student-app .input-with-icon select:disabled {
+  background-color: #f7fafc;
+  cursor: not-allowed;
+  color: #4a5568;
+  border-color: #e2e8f0;
+}
+
+@media (max-width: 768px) {
+  .student-app .profile-page {
+    padding: 20px;
+  }
+
+  .student-app .form-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .student-app .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .student-app .profile-info h1 {
+    font-size: 1.5rem;
+  }
+}

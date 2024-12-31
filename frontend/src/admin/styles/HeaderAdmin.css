@@ -1,0 +1,103 @@
+.admin-app .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 70px;
+}
+
+.admin-app .logo h1 {
+    color: #1976d2;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.admin-app .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.admin-app .notification-btn {
+    background: none;
+    border: none;
+    position: relative;
+    cursor: pointer;
+    color: #666;
+    font-size: 1.2rem;
+    padding: 8px;
+}
+
+.admin-app .notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #f44336;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 15px;
+    text-align: center;
+}
+
+.admin-app .profile {
+    display: flex;
+    align-items: center;
+}
+
+.admin-app .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f0f0f0;
+    cursor: pointer;
+}
+
+/* Layout structure classes */
+.admin-app .dashboard-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.admin-app .dashboard-container {
+    display: flex;
+    margin-top: 70px;
+    min-height: calc(100vh - 70px);
+}
+
+.admin-app .dashboard-content {
+    flex: 1;
+    padding: 20px;
+    background-color: #f8f9fc;
+}
+
+/* Dashboard welcome section */
+.admin-app .dashboard-welcome {
+    margin-bottom: 30px;
+}
+
+.admin-app .dashboard-welcome h1 {
+    font-size: 1.8rem;
+    color: #333;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.admin-app .dashboard-welcome p {
+    color: #666;
+    font-size: 1rem;
+    margin: 0;
+}
+  

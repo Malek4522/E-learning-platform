@@ -1,0 +1,86 @@
+.navbar {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 1rem 2rem;
+  color: white;
+  font-family: 'Arial', sans-serif;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbarContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbarLogo {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logoImage {
+  height: 30px;
+  width: auto;
+}
+
+.navbarMenu {
+  list-style: none;
+  display: flex;
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.navbarItem {
+  display: inline;
+}
+
+.navbarLink {
+  color: white;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.3s;
+  padding: 0.5rem 0;
+}
+
+.navbarLink:hover {
+  color: #ff4081;
+}
+
+/* Add padding to the content below navbar */
+:global(body) {
+  margin: 0;
+  padding: 0;
+}
+
+:global(#root) {
+  padding-top: 70px;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .navbarMenu {
+    gap: 0.75rem;
+  }
+
+  .navbarLink {
+    font-size: 0.9rem;
+  }
+}

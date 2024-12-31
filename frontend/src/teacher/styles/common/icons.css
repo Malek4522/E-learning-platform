@@ -1,0 +1,32 @@
+/* Dashboard Icons */
+.icon-wrapper {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  margin-right: 12px;
+  transition: all 0.3s ease;
+}
+
+.icon-wrapper.dashboard {
+  background: linear-gradient(135deg, #4CAF50, #81C784);
+}
+
+.icon-wrapper.courses {
+  background: linear-gradient(135deg, #2196F3, #64B5F6);
+}
+
+.icon-wrapper.students {
+  background: linear-gradient(135deg, #FF9800, #FFB74D);
+}
+
+.icon-wrapper.add {
+  background: linear-gradient(135deg, #9C27B0, #BA68C8);
+}
+
+.icon-wrapper i {
+  color: white;
+  font-size: 1.1rem;
+} 

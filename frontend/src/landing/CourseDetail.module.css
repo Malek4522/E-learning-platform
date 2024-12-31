@@ -1,0 +1,72 @@
+.courseDetailContainer {
+  padding: 2rem;
+  text-align: center;
+  background: #f4f6f8; /* Light background color */
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 2rem auto;
+  font-family: 'Arial', sans-serif;
+}
+
+.courseDetailContainer h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.courseDetailContainer p {
+  font-size: 1.2rem;
+  color: #34495e;
+  font-weight: 300;
+  margin-bottom: 1rem;
+}
+
+.instructor,
+.targetAudience {
+  font-weight: bold;
+  color: #1976d2;
+}
+
+.courseDetailContainer h2 {
+  font-size: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.courseDetailContainer ul {
+  list-style: none;
+  padding: 0;
+}
+
+.courseDetailContainer li {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.enrollButton {
+  padding: 1rem 2rem;
+  background: #ff4081; /* Pink */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition: background 0.3s;
+  margin-top: 2rem;
+}
+
+.enrollButton:hover {
+  background: #e91e63; /* Darker pink */
+}
+
+.enrollButton:focus {
+  outline: 2px solid #ff4081; /* Pink */
+  outline-offset: 2px;
+}

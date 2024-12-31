@@ -1,0 +1,163 @@
+.grades-page {
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  min-height: 100vh;
+}
+
+.grades-page h1 {
+  margin-bottom: 30px;
+  color: #1a365d;
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+.course-title {
+  color: #2c5282;
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.lesson-grade {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.lesson-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.lesson-title {
+  font-size: 1.4rem;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.score {
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 20px;
+}
+
+.score.perfect {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.score.good {
+  background: #e6fffa;
+  color: #234e52;
+}
+
+.score.needs-improvement {
+  background: #fed7d7;
+  color: #822727;
+}
+
+.submission-info {
+  font-size: 0.9rem;
+  color: #718096;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.question-item {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.question-text {
+  font-weight: 500;
+  color: #2d3748;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+}
+
+.answer-details {
+  padding-left: 15px;
+  border-left: 3px solid #e2e8f0;
+}
+
+.your-answer {
+  margin-bottom: 8px;
+  color: #4a5568;
+}
+
+.correct-answer {
+  color: #2f855a;
+  font-weight: 500;
+}
+
+.wrong-answer {
+  color: #c53030;
+}
+
+/* Add some hover effects */
+.lesson-grade:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .grades-page {
+    padding: 20px;
+  }
+
+  .grades-page h1 {
+    font-size: 2rem;
+  }
+
+  .course-title {
+    font-size: 1.5rem;
+  }
+
+  .lesson-title {
+    font-size: 1.2rem;
+  }
+}
+
+.course-section {
+  margin-bottom: 50px;
+  padding-bottom: 30px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.course-section:last-child {
+  border-bottom: none;
+}
+
+.questions-list {
+  margin-top: 20px;
+}
+
+/* Add a subtle animation when courses load */
+.course-section {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

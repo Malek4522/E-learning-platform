@@ -1,0 +1,60 @@
+.loginContainer {
+  padding: 2rem;
+  text-align: center;
+  background: #f4f6f8;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 120px auto 2rem auto;
+  font-family: 'Arial', sans-serif;
+}
+
+.loginContainer h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 1rem;
+  color: #34495e;
+  margin-bottom: 0.5rem;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.submitButton {
+  padding: 1rem 2rem;
+  background: #ff4081; /* Pink */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition: background 0.3s;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.submitButton:hover {
+  background: #e91e63; /* Darker pink */
+}
+
+.submitButton:focus {
+  outline: 2px solid #ff4081; /* Pink */
+  outline-offset: 2px;
+}
