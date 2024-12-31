@@ -1,19 +1,43 @@
 const Course = require('../models/Course');
+const Forum = require('../models/Forum');
 
 // Create new course
 exports.createCourse = async (req, res) => {
     try {
-        const course = new Course({
-            title: req.body.title,
-            description: req.body.description,
-            key: req.body.key,
-            categories: req.body.categories,
-            teacher_id: req.user.id,
-            chapters: req.body.chapters
-        });
+        // Start a session for transaction
+        const session = await Course.startSession();
+        session.startTransaction();
 
-        await course.save();
-        res.status(201).json(course);
+        try {
+            const course = new Course({
+                title: req.body.title,
+                description: req.body.description,
+                key: req.body.key,
+                categories: req.body.categories,
+                teacher_id: req.user.id,
+                chapters: req.body.chapters
+            });
+
+            await course.save({ session });
+
+            // Create associated forum
+            const forum = new Forum({
+                course_id: course._id
+            });
+
+            await forum.save({ session });
+
+            // Commit the transaction
+            await session.commitTransaction();
+            session.endSession();
+
+            res.status(201).json(course);
+        } catch (error) {
+            // If any error occurs, abort transaction
+            await session.abortTransaction();
+            session.endSession();
+            throw error;
+        }
     } catch (error) {
         console.error('Error in createCourse:', error);
         res.status(500).json({ 
@@ -98,19 +122,44 @@ exports.updateCourse = async (req, res) => {
 // Delete course
 exports.deleteCourse = async (req, res) => {
     try {
-        const course = await Course.findById(req.params.id);
-        
-        if (!course) {
-            return res.status(404).json({ message: 'Course not found' });
-        }
+        // Start a session for transaction
+        const session = await Course.startSession();
+        session.startTransaction();
 
-        // Check if user is the teacher of the course
-        if (course.teacher_id.toString() !== req.user.id) {
-            return res.status(403).json({ message: 'Not authorized to delete this course' });
-        }
+        try {
+            const course = await Course.findById(req.params.id);
+            
 
-        await course.remove();
-        res.json({ message: 'Course deleted successfully' });
+            // Check if user is the teacher of the course or an admin
+            if (course.teacher_id.toString() !== req.user?.id && !req.admin) {
+                await session.abortTransaction();
+                session.endSession();
+                return res.status(403).json({ message: 'Not authorized to delete this course' });
+            }
+
+            if (!course) {
+                await session.abortTransaction();
+                session.endSession();
+                return res.status(404).json({ message: 'Course not found' });
+            }
+
+            // Delete the associated forum
+            await Forum.findOneAndDelete({ course_id: course._id }, { session });
+
+            // Delete the course
+            await course.delete({ session });
+
+            // Commit the transaction
+            await session.commitTransaction();
+            session.endSession();
+
+            res.json({ message: 'Course and associated forum deleted successfully' });
+        } catch (error) {
+            // If any error occurs, abort transaction
+            await session.abortTransaction();
+            session.endSession();
+            throw error;
+        }
     } catch (error) {
         console.error('Error in deleteCourse:', error);
         res.status(500).json({ message: 'Error deleting course' });

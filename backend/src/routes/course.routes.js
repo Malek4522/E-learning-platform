@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const courseController = require('../controllers/course.controller');
-const authMiddleware = require('../middleware/auth.middleware');
+const {authenticate} = require('../middleware/auth.middleware');
 
 // Apply auth middleware to all routes
-router.use(authMiddleware);
+router.use(authenticate);
 
 router.post('/', courseController.createCourse);
 router.get('/', courseController.getCourses);
