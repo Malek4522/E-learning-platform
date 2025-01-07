@@ -30,10 +30,16 @@ function SignUp() {
       try {
         const response = await axios.post('/api/v1/auth/register', formData);
         
-        // Registration successful
-        navigate('/login');
+        if (response.status === 201) {
+          // Registration successful
+          navigate('/login');
+        }
       } catch (error) {
-        alert(error.response?.data?.message || 'Registration failed');
+        if (error.response?.status === 400) {
+          alert('Email already exists. Please use a different email address.');
+        } else {
+          alert('Registration failed. Please try again.');
+        }
       }
     } else {
       alert('Passwords do not match');

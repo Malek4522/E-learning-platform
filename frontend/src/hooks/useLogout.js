@@ -1,26 +1,27 @@
 import { useState } from 'react';
 import authService from '../services/AuthService';
+import axios from 'axios';
 
 const useLogout = () => {
   const [status, setStatus] = useState({ type: null, message: null });
 
   const logout = async () => {
     try {
-      const response = await fetch('/api/v1/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
+      const response = await axios.post('/api/v1/auth/logout', {}, {
+        withCredentials: true
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200) {
         authService.setAccessToken(null); // Clear the access token
         setStatus({ type: 'success', message: 'Logged out successfully!' });
       } else {
-        setStatus({ type: 'error', message: data.message || 'Logout failed' });
+        setStatus({ type: 'error', message: response.data.message || 'Logout failed' });
       }
     } catch (error) {
-      setStatus({ type: 'error', message: 'Error during logout: ' + error.message });
+      setStatus({ 
+        type: 'error', 
+        message: 'Error during logout: ' + (error.response?.data?.message || error.message)
+      });
     }
   };
 

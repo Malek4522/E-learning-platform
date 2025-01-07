@@ -1,33 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import useProtectedRequest from "../../hooks/useProtectedRequest";
 import "../styles/pages/Profile.css";
 
 function Profile() {
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@student.com",
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
     level: "1st Year",
     specialization: "LMD Security",
-    address: "123 University Street, City",
+    address: "",
   });
+
+  // Fetch profile data
+  const { data: profileData, status: fetchStatus } = useProtectedRequest("/api/v1/users/profile");
+
+  // For updates, we'll use the hook with null requestData initially
+  const { status: updateStatus, makeRequest: updateProfile } = useProtectedRequest(
+    "/api/v1/users/profile",
+    "PUT"
+  );
+
+  // Initialize form data when profile is fetched
+  useEffect(() => {
+    if (profileData?.profile) {
+      setFormData({
+        firstName: profileData.profile.first_name || "",
+        lastName: profileData.profile.last_name || "",
+        email: profileData.email || "",
+        level: profileData.level || "1st Year",
+        specialization: profileData.specialization || "LMD Security",
+        address: profileData.address || "algeria blida",
+      });
+    }
+  }, [profileData]);
+
+  // Watch for update completion
+  useEffect(() => {
+    if (updateStatus.type === 'success') {
+      setIsEditing(false);
+      alert("Profile updated successfully!");
+    } else if (updateStatus.type === 'error') {
+      alert(`Failed to update profile: ${updateStatus.message}`);
+    }
+  }, [updateStatus]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setProfileData((prev) => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
+  const handleSubmit = () => {
+    const updateData = {
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      bio: formData.bio,
+      profile_picture: formData.profile_picture,
+      email: formData.email,
+      level: formData.level,
+      specialization: formData.specialization,
+      address: formData.address
+    };
+
+    // Call makeRequest with the update data
+    updateProfile(updateData);
+  };
+
   const handleEditToggle = () => {
     if (isEditing) {
-      // Save changes
-      // TODO: Add API call to save changes
-      alert("Profile updated successfully!");
+      handleSubmit();
+    } else {
+      setIsEditing(true);
     }
-    setIsEditing(!isEditing);
   };
+
+  if (fetchStatus.type === "error") {
+    return <div className="error-message">Failed to load profile: {fetchStatus.message}</div>;
+  }
+
+  if (!profileData) {
+    return <div className="loading">Loading profile...</div>;
+  }
 
   return (
     <div className="student-app">
@@ -35,16 +92,16 @@ function Profile() {
         <div className="profile-header">
           <div className="profile-avatar">
             <div className="avatar-initials">
-              {profileData.firstName[0]}
-              {profileData.lastName[0]}
+              {formData.firstName[0]}
+              {formData.lastName[0]}
             </div>
           </div>
           <div className="profile-info">
             <h1>
-              {profileData.firstName} {profileData.lastName}
+              {formData.firstName} {formData.lastName}
             </h1>
             <p>
-              {profileData.level} - {profileData.specialization}
+              {formData.level} - {formData.specialization}
             </p>
           </div>
           <button
@@ -63,7 +120,7 @@ function Profile() {
                 <input
                   type="text"
                   name="firstName"
-                  value={profileData.firstName}
+                  value={formData.firstName}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
@@ -76,7 +133,7 @@ function Profile() {
                 <input
                   type="text"
                   name="lastName"
-                  value={profileData.lastName}
+                  value={formData.lastName}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
@@ -92,7 +149,7 @@ function Profile() {
                 <input
                   type="email"
                   name="email"
-                  value={profileData.email}
+                  value={formData.email}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
@@ -104,7 +161,7 @@ function Profile() {
               <div className="input-with-icon">
                 <select
                   name="level"
-                  value={profileData.level}
+                  value={formData.level}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 >
@@ -124,14 +181,12 @@ function Profile() {
               <div className="input-with-icon">
                 <select
                   name="specialization"
-                  value={profileData.specialization}
+                  value={formData.specialization}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 >
                   <option value="LMD Security">LMD Security</option>
-                  <option value="Software Engineering">
-                    Software Engineering
-                  </option>
+                  <option value="Software Engineering">Software Engineering</option>
                   <option value="Data Science">Data Science</option>
                   <option value="Networks">Networks</option>
                   <option value="AI">AI & Machine Learning</option>
@@ -144,7 +199,7 @@ function Profile() {
                 <input
                   type="text"
                   name="address"
-                  value={profileData.address}
+                  value={formData.address}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />

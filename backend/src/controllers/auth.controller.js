@@ -54,13 +54,13 @@ const setRefreshTokenCookie = (res, refreshToken) => {
   // Set cookie for /api/auth/refresh
   res.cookie('refreshToken', refreshToken, {
     ...cookie,
-    path: '/api/auth/refresh' // Restrict cookie to refresh endpoint
+    path: '/api/v1/auth/refresh' // Restrict cookie to refresh endpoint
   });
 
   // Set cookie for /api/auth/logout
   res.cookie('refreshToken', refreshToken, {
     ...cookie,
-    path: '/api/auth/logout' // Restrict cookie to logout endpoint
+    path: '/api/v1/auth/logout' // Restrict cookie to logout endpoint
   });
 };
 
@@ -85,7 +85,7 @@ const authenticateAdmin = async (email, password, req) => {
 
   const { accessToken, refreshToken } = generateTokens({
     _id: admin._id,
-    role: admin.role,
+    role: 'admin',
     email: admin.email
   });
   
