@@ -15,7 +15,7 @@ const useProtectedRequest = (url, method = 'GET', initialRequestData = null) => 
         });
         authService.setAccessToken(refreshResponse.data.accessToken);
       } catch (error) {
-        //window.location.href = '/login';
+        window.location.href = '/login';
         return;
       }
     }
@@ -61,12 +61,6 @@ const useProtectedRequest = (url, method = 'GET', initialRequestData = null) => 
       throw error;
     }
   };
-
-  useEffect(() => {
-    if (method === 'GET') {
-      makeRequest();
-    }
-  }, [url]);
 
   return { data, status, makeRequest };
 };

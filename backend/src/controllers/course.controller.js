@@ -31,7 +31,9 @@ exports.createCourse = async (req, res) => {
             await session.commitTransaction();
             session.endSession();
 
-            res.status(201).json(course);
+            // Convert to object with virtuals before sending response
+            const courseWithVirtuals = course.toObject({ virtuals: true });
+            res.status(201).json(courseWithVirtuals);
         } catch (error) {
             // If any error occurs, abort transaction
             await session.abortTransaction();
@@ -50,9 +52,13 @@ exports.createCourse = async (req, res) => {
 // Get all courses
 exports.getCourses = async (req, res) => {
     try {
-        const courses = await Course.find()
+        let courses = await Course.find()
             .populate('teacher_id', 'email profile')
             .select('-key -chapters.lessons.quiz.questions.correct_answer_index');
+        
+        // Convert to plain objects with virtuals explicitly
+        courses = courses.map(course => course.toObject({ virtuals: true }));
+        
         res.json(courses);
     } catch (error) {
         console.error('Error in getCourses:', error);
@@ -72,7 +78,9 @@ exports.getCourse = async (req, res) => {
             return res.status(404).json({ message: 'Course not found' });
         }
         
-        res.json(course);
+        // Convert to plain object with virtuals
+        const courseWithVirtuals = course.toObject({ virtuals: true });
+        res.json(courseWithVirtuals);
     } catch (error) {
         console.error('Error in getCourse:', error);
         res.status(500).json({ message: 'Error fetching course' });
@@ -109,7 +117,11 @@ exports.updateCourse = async (req, res) => {
         const updatedCourse = await Course.findByIdAndUpdate(
             req.params.id,
             { $set: allowedUpdates },
-            { new: true, runValidators: true }
+            { 
+                new: true, 
+                runValidators: true,
+                lean: { virtuals: true }
+            }
         );
 
         res.json(updatedCourse);
@@ -147,7 +159,7 @@ exports.deleteCourse = async (req, res) => {
             await Forum.findOneAndDelete({ course_id: course._id }, { session });
 
             // Delete the course
-            await course.delete({ session });
+            await Course.findByIdAndDelete(course._id, { session });
 
             // Commit the transaction
             await session.commitTransaction();

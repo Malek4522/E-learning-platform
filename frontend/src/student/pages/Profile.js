@@ -14,8 +14,12 @@ function Profile() {
   });
 
   // Fetch profile data
-  const { data: profileData, status: fetchStatus } = useProtectedRequest("/api/v1/users/profile");
+  const { data: profileData, status: fetchStatus , makeRequest: fetchProfile} = useProtectedRequest("/api/v1/users/profile");
 
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+  
   // For updates, we'll use the hook with null requestData initially
   const { status: updateStatus, makeRequest: updateProfile } = useProtectedRequest(
     "/api/v1/users/profile",

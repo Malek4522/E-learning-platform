@@ -103,7 +103,7 @@ const chapterSchema = new Schema({
       }
     }],
     required: [true, 'At least one lesson is required'],
-    validate: [arr => arr.length >= 1, 'At least one lesson is required']
+    //validate: [arr => arr.length >= 1, 'At least one lesson is required']
   }
 });
 
@@ -162,14 +162,16 @@ const courseSchema = new Schema({
   chapters: {
     type: [chapterSchema],
     required: true,
-    validate: [arr => arr.length > 0, 'At least one chapter is required']
+    //validate: [arr => arr.length > 0, 'At least one chapter is required']
   },
   reviews: [reviewSchema]
 }, {
   timestamps: {
     createdAt: 'created_at',
     updatedAt: 'updated_at'
-  }
+  },
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
 // Indexes

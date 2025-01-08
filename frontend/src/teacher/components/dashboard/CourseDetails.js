@@ -4,6 +4,7 @@ import Navbar from "../common/Navbar";
 import Sidebar from "../common/Sidebar";
 import ChapterModal from "../common/ChapterModal";
 import LessonModal from "../common/LessonModal";
+import useProtectedRequest from "../../../hooks/useProtectedRequest";
 import "../../styles/dashboard/courseDetails.css";
 
 function CourseDetails() {
@@ -11,27 +12,33 @@ function CourseDetails() {
   const [course, setCourse] = useState({
     title: '',
     chapters: [],
-    id: null
+    id: null,
+    totalVideoDuration: 0
   });
   const [showAddChapter, setShowAddChapter] = useState(false);
   const [showAddLesson, setShowAddLesson] = useState(false);
   const [currentChapterId, setCurrentChapterId] = useState(null);
 
+  // Setup protected requests
+  const { makeRequest: fetchCourse } = useProtectedRequest(`/api/v1/courses/${id}`);
+  const { makeRequest: updateCourse } = useProtectedRequest(`/api/v1/courses/${id}`, 'PUT');
+  const { makeRequest: deleteCourseRequest } = useProtectedRequest(`/api/v1/courses/${id}`, 'DELETE');
+
   useEffect(() => {
-    const courses = JSON.parse(localStorage.getItem("courses")) || [];
-    const currentCourse = courses.find((c) => c.id === parseInt(id));
-    if (currentCourse) {
-      setCourse({
-        ...currentCourse,
-        chapters: currentCourse.chapters || []
-      });
-    }
+    const loadCourse = async () => {
+      try {
+        const courseData = await fetchCourse();
+        setCourse(courseData);
+      } catch (error) {
+        console.error('Error loading course:', error);
+      }
+    };
+    loadCourse();
   }, [id]);
 
-  const handleAddChapter = (chapterTitle) => {
+  const handleAddChapter = async (chapterTitle) => {
     const chapterToAdd = {
-      id: Date.now(),
-      title: chapterTitle,
+      chapter_title: chapterTitle,
       lessons: []
     };
 
@@ -40,26 +47,41 @@ function CourseDetails() {
       chapters: [...course.chapters, chapterToAdd]
     };
 
-    // Update localStorage
-    const courses = JSON.parse(localStorage.getItem("courses")) || [];
-    const updatedCourses = courses.map(c => 
-      c.id === course.id ? updatedCourse : c
-    );
-    localStorage.setItem("courses", JSON.stringify(updatedCourses));
-    
-    setCourse(updatedCourse);
-    setShowAddChapter(false);
+    try {
+      const result = await updateCourse(updatedCourse);
+      setCourse(result);
+      setShowAddChapter(false);
+    } catch (error) {
+      console.error('Error adding chapter:', error);
+    }
   };
 
-  const handleAddLesson = (lessonData) => {
+  const handleAddLesson = async (lessonData) => {
+    // Temporary fixed video URL - replace with actual video upload later
+    const TEMP_VIDEO_URL = "https://example.com/temp-video.mp4";
+    
     const lessonToAdd = {
-      id: Date.now(),
-      ...lessonData,
-      materials: []
+      content: {
+        video: {
+          video_url: TEMP_VIDEO_URL,
+          description: lessonData.description || "Temporary video description",
+          duration: parseInt(lessonData.duration) || 0
+        },
+        document: null
+      },
+      quiz: {
+        quiz_title: lessonData.quiz.quiz_title,
+        questions: lessonData.quiz.questions.map(q => ({
+          question_text: q.question_text,
+          options: q.options,
+          correct_answer_index: q.correct_answer_index,
+          explanation: q.explanation
+        }))
+      }
     };
 
     const updatedChapters = course.chapters.map(chapter => {
-      if (chapter.id === currentChapterId) {
+      if (chapter._id === currentChapterId) {
         return {
           ...chapter,
           lessons: [...chapter.lessons, lessonToAdd]
@@ -73,24 +95,25 @@ function CourseDetails() {
       chapters: updatedChapters
     };
 
-    // Update localStorage
-    const courses = JSON.parse(localStorage.getItem("courses")) || [];
-    const updatedCourses = courses.map(c => 
-      c.id === course.id ? updatedCourse : c
-    );
-    localStorage.setItem("courses", JSON.stringify(updatedCourses));
-    
-    setCourse(updatedCourse);
-    setShowAddLesson(false);
+    try {
+      const result = await updateCourse(updatedCourse);
+      setCourse(result);
+      setShowAddLesson(false);
+    } catch (error) {
+      console.error('Error adding lesson:', error);
+    }
   };
 
-  const handleDeleteLesson = (lessonId) => {
+  const handleDeleteLesson = async (chapterId, lessonId) => {
     if (window.confirm('Are you sure you want to delete this lesson?')) {
       const updatedChapters = course.chapters.map(chapter => {
-        return {
-          ...chapter,
-          lessons: chapter.lessons.filter(lesson => lesson.id !== lessonId)
-        };
+        if (chapter._id === chapterId) {
+          return {
+            ...chapter,
+            lessons: chapter.lessons.filter(lesson => lesson._id !== lessonId)
+          };
+        }
+        return chapter;
       });
 
       const updatedCourse = {
@@ -98,25 +121,23 @@ function CourseDetails() {
         chapters: updatedChapters
       };
 
-      // Update localStorage
-      const courses = JSON.parse(localStorage.getItem("courses")) || [];
-      const updatedCourses = courses.map(c => 
-        c.id === course.id ? updatedCourse : c
-      );
-      localStorage.setItem("courses", JSON.stringify(updatedCourses));
-      
-      setCourse(updatedCourse);
+      try {
+        const result = await updateCourse(updatedCourse);
+        setCourse(result);
+      } catch (error) {
+        console.error('Error deleting lesson:', error);
+      }
     }
   };
 
-  const handleDeleteCourse = () => {
+  const handleDeleteCourse = async () => {
     if (window.confirm('Are you sure you want to delete this course?')) {
-      const courses = JSON.parse(localStorage.getItem("courses")) || [];
-      const updatedCourses = courses.filter(c => c.id !== course.id);
-      localStorage.setItem("courses", JSON.stringify(updatedCourses));
-      
-      // Navigate back to courses page
-      window.location.href = '/teacher/my-courses';
+      try {
+        await deleteCourseRequest();
+        window.location.href = '/teacher/my-courses';
+      } catch (error) {
+        console.error('Error deleting course:', error);
+      }
     }
   };
 
@@ -141,11 +162,12 @@ function CourseDetails() {
                   </span>
                   <span>
                     <i className="fas fa-clock"></i>
-                    {course.duration || 0}h Total Duration
-                  </span>
-                  <span>
-                    <i className="fas fa-chart-line"></i>
-                    {course.progress || 0}% Complete
+                    {(() => {
+                      const totalMinutes = course.totalVideoDuration || 0;
+                      const hours = Math.floor(totalMinutes / 60);
+                      const minutes = totalMinutes % 60;
+                      return `${hours}h ${minutes}m`;
+                    })()} Total Duration
                   </span>
                 </div>
               </div>
@@ -167,7 +189,6 @@ function CourseDetails() {
               </div>
             </div>
 
-            {/* Add Chapter Modal */}
             {showAddChapter && (
               <ChapterModal 
                 onClose={() => setShowAddChapter(false)} 
@@ -175,7 +196,6 @@ function CourseDetails() {
               />
             )}
 
-            {/* Add Lesson Modal */}
             {showAddLesson && (
               <LessonModal 
                 onClose={() => setShowAddLesson(false)} 
@@ -184,32 +204,30 @@ function CourseDetails() {
               />
             )}
 
-            {/* Display existing chapters */}
             <div className="chapters-list">
-              {course.chapters.length > 0 ? (
+              {course.chapters && course.chapters.length > 0 ? (
                 course.chapters.map((chapter) => (
-                  <div key={chapter.id} className="chapter-item">
-                    <h3>{chapter.title}</h3>
+                  <div key={chapter._id} className="chapter-item">
+                    <h3>{chapter.chapter_title}</h3>
                     <button 
                       className="add-lesson-btn"
                       onClick={() => {
-                        setCurrentChapterId(chapter.id);
+                        setCurrentChapterId(chapter._id);
                         setShowAddLesson(true);
                       }}
                     >
                       <i className="fas fa-plus"></i>
                       Add New Lesson
                     </button>
-                    {/* Display lessons for this chapter */}
                     <div className="lessons-list">
-                      {chapter.lessons.length > 0 ? (
+                      {chapter.lessons && chapter.lessons.length > 0 ? (
                         chapter.lessons.map((lesson) => (
-                          <div key={lesson.id} className="lesson-item">
-                            <h4>{lesson.title}</h4>
-                            <span>{lesson.duration} minutes</span>
+                          <div key={lesson._id} className="lesson-item">
+                            <h4>{lesson.quiz.quiz_title}</h4>
+                            <span>{lesson.content.video?.duration || 0} minutes</span>
                             <button 
                               className="delete-lesson-btn"
-                              onClick={() => handleDeleteLesson(lesson.id)}
+                              onClick={() => handleDeleteLesson(chapter._id, lesson._id)}
                             >
                               <i className="fas fa-trash"></i>
                             </button>

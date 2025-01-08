@@ -2,60 +2,50 @@ import React, { useState, useEffect } from "react";
 import CourseCard from "./CourseCard";
 import Navbar from "../common/Navbar";
 import Sidebar from "../common/Sidebar";
+import useProtectedRequest from "../../../hooks/useProtectedRequest";
 import "../../styles/dashboard/dashboard.css";
 import logo from "../../assets/images/logo.png";
-
-// Move defaultCourses outside the component
-const defaultCourses = [
-  {
-    id: 1,
-    title: "Basic to Advance Figma",
-    lessons: 20,
-    duration: 15,
-    thumbnail: logo,
-    progress: 75,
-    path: "/teacher/course/1",
-  },
-  {
-    id: 2,
-    title: "React JS Basic to Advance",
-    lessons: 25,
-    duration: 20,
-    thumbnail: logo,
-    progress: 45,
-    path: "/teacher/course/2",
-  },
-  {
-    id: 3,
-    title: "Mastering JS with Laravel",
-    lessons: 30,
-    duration: 25,
-    thumbnail: logo,
-    progress: 60,
-    path: "/teacher/course/3",
-  },
-];
 
 function Dashboard() {
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const { makeRequest, status } = useProtectedRequest('/api/v1/courses', 'GET');
+
+  const fetchCourses = async () => {
+    try {
+      const response = await makeRequest();
+      if (response) {
+        // Format courses with required UI properties
+        const formattedCourses = response.map(course => ({
+          ...course,
+          id: course._id,
+          thumbnail: logo,
+          progress: 0, // You might want to calculate this from actual progress data
+          duration: (() => {
+            const totalMinutes = course.totalVideoDuration || 0;
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            return `${hours}:${minutes.toString().padStart(2, '0')}`;
+          })(),
+          lessons: course.chapters.reduce((total, chapter) => 
+            total + chapter.lessons.length, 0),
+          path: `/teacher/course/${course._id}`
+        }));
+        setCourses(formattedCourses);
+      }
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
+  };
 
   useEffect(() => {
-    // Load courses from localStorage, if none exist use default courses
-    const savedCourses = JSON.parse(localStorage.getItem("courses")) || defaultCourses;
-    
-    // Ensure all courses have the proper styling properties
-    const formattedCourses = savedCourses.map(course => ({
-      ...course,
-      thumbnail: course.thumbnail || logo,
-      progress: course.progress || 0,
-      duration: course.duration || 0,
-      lessons: course.lessons?.length || 0,
-      path: `/teacher/course/${course.id}`
-    }));
-    
-    setCourses(formattedCourses);
-  }, []); // Empty dependency array is fine now since defaultCourses is constant
+    fetchCourses();
+  }, []); // Empty dependency array since we only want to fetch once on mount
+
+  // Handle course deletion
+  const handleCourseDelete = (courseId) => {
+    setCourses(prevCourses => prevCourses.filter(course => course.id !== courseId));
+  };
 
   // Filter courses based on search term
   const filteredCourses = courses.filter(course => 
@@ -88,9 +78,19 @@ function Dashboard() {
             </div>
           </div>
           <div className="courses-grid">
-            {filteredCourses.length > 0 ? (
+            {status.type === 'loading' ? (
+              <div className="loading-message">Loading courses...</div>
+            ) : status.type === 'error' ? (
+              <div className="error-message">
+                {status.message || 'Error loading courses'}
+              </div>
+            ) : filteredCourses.length > 0 ? (
               filteredCourses.map((course) => (
-                <CourseCard key={course.id} course={course} />
+                <CourseCard 
+                  key={course.id} 
+                  course={course} 
+                  onDelete={handleCourseDelete}
+                />
               ))
             ) : (
               <div className="no-results">

@@ -230,6 +230,40 @@
   border: 1px solid #e5e7eb;
 }
 
+.options-container {
+  margin-top: 1rem;
+}
+
+.options-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.option-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.option-control-btn {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.option-control-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+
+.option-control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .option-item {
   display: flex;
   align-items: center;
@@ -249,6 +283,11 @@
   width: 1rem;
   height: 1rem;
   cursor: pointer;
+}
+
+.option-item label {
+  font-size: 0.8rem;
+  color: #64748b;
 }
 
 /* Modal Actions */
