@@ -8,6 +8,7 @@ router.use(authenticate);
 
 router.post('/', courseController.createCourse);
 router.get('/', courseController.getCourses);
+router.get('/enrolled', courseController.getEnrolledCourses);
 router.get('/:id', courseController.getCourse);
 router.put('/:id', courseController.updateCourse);
 router.delete('/:id', courseController.deleteCourse);

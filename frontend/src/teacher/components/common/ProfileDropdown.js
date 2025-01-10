@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import useLogout from '../../../hooks/useLogout';
 import '../../styles/common/profileDropdown.css';
 
 function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+  const { logout, status } = useLogout();
 
   const instructor = {
     firstName: 'John',
@@ -23,6 +26,16 @@ function ProfileDropdown() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+    
+  };
 
   return (
     <div className="profile-dropdown" ref={dropdownRef}>
@@ -63,7 +76,7 @@ function ProfileDropdown() {
               Settings
             </Link>
             <div className="dropdown-divider"></div>
-            <button className="dropdown-item logout">
+            <button onClick={handleLogout} className="dropdown-item logout">
               <i className="fas fa-sign-out-alt"></i>
               Logout
             </button>

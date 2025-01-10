@@ -648,7 +648,7 @@ main.main-content {
 }
 
 .completed::before {
-  content: "✅";
+  /* content: "✅"; */
 }
 
 .pending {

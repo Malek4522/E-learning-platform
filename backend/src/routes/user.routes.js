@@ -14,6 +14,8 @@ router.put('/profile', validateProfileUpdate, userController.updateProfile);
 // Course enrollment routes
 router.get('/courses', userController.getEnrolledCourses);
 router.post('/courses/:key/enroll', userController.enrollCourse_key);
+router.get('/courses/enrolled-students', userController.getEnrolledStudents);
+router.delete('/courses/remove-student', userController.removeStudentFromCourse);
 
 
 module.exports = router; 

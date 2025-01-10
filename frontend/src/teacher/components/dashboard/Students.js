@@ -1,66 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../common/Navbar";
 import Sidebar from "../common/Sidebar";
 import "../../styles/dashboard/students.css";
+import useProtectedRequest from "../../../hooks/useProtectedRequest";
 
 function Students() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingStudent, setEditingStudent] = useState(null);
-  const [students, setStudents] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      course: "React JS Basic to Advance",
-      joiningDate: "2023-11-20",
-      email: "john@example.com",
-      progress: 75,
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      course: "Basic to Advance Figma",
-      joiningDate: "2023-11-15",
-      email: "jane@example.com",
-      progress: 45,
-    },
-  ]);
+  const [students, setStudents] = useState([]);
 
-  const handleEdit = (student) => {
-    setEditingStudent(student);
-    setIsEditing(true);
-  };
+  const { makeRequest: fetchStudents } = useProtectedRequest('/api/v1/users/courses/enrolled-students');
+  const { makeRequest: deleteStudent } = useProtectedRequest('/api/v1/users/courses/remove-student', 'DELETE');
 
-  const handleDelete = (id) => {
+  useEffect(() => {
+    const loadStudents = async () => {
+      try {
+        const data = await fetchStudents();
+        setStudents(data);
+      } catch (error) {
+        console.error('Failed to fetch students:', error);
+      }
+    };
+    loadStudents();
+  }, []);
+
+  const handleDelete = async (student) => {
     if (window.confirm("Are you sure you want to delete this student?")) {
-      setStudents(students.filter((student) => student.id !== id));
+      try {
+        await deleteStudent({
+          courseId: student.courseId,
+          studentId: student.studentId
+        });
+        setStudents(students.filter((s) => s.studentId !== student.studentId));
+      } catch (error) {
+        console.error('Failed to delete student:', error);
+      }
     }
-  };
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    setStudents(
-      students.map((student) =>
-        student.id === editingStudent.id ? editingStudent : student
-      )
-    );
-    setIsEditing(false);
-    setEditingStudent(null);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditingStudent({
-      ...editingStudent,
-      [name]: value,
-    });
   };
 
   const filteredStudents = students.filter(
     (student) =>
       student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.course.toLowerCase().includes(searchTerm.toLowerCase())
+      student.courseName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -97,32 +78,25 @@ function Students() {
               </thead>
               <tbody>
                 {filteredStudents.map((student) => (
-                  <tr key={student.id}>
+                  <tr key={student.studentId}>
                     <td>
                       <div className="student-info">
                         <img
-                          src={`https://ui-avatars.com/api/?name=${student.name}`}
+                          src={`https://ui-avatars.com/api/?name=${encodeURIComponent(student.name)}&background=random&color=fff&bold=true&format=svg`}
                           alt={student.name}
                         />
                         <span>{student.name}</span>
                       </div>
                     </td>
-                    <td>{student.course}</td>
-                    <td>{student.joiningDate}</td>
+                    <td>{student.courseName}</td>
+                    <td>{new Date(student.joiningDate).toLocaleDateString()}</td>
                     <td>{student.email}</td>
                     <td>
                       <div className="action-buttons">
                         <button
-                          className="edit-btn"
-                          title="Edit"
-                          onClick={() => handleEdit(student)}
-                        >
-                          <i className="fas fa-edit"></i>
-                        </button>
-                        <button
                           className="delete-btn"
                           title="Delete"
-                          onClick={() => handleDelete(student.id)}
+                          onClick={() => handleDelete(student)}
                         >
                           <i className="fas fa-trash"></i>
                         </button>
@@ -133,71 +107,6 @@ function Students() {
               </tbody>
             </table>
           </div>
-
-          {isEditing && (
-            <div className="edit-form-container">
-              <div className="edit-form">
-                <h2>Edit Student</h2>
-                <form onSubmit={handleSave}>
-                  <div className="form-group">
-                    <label>Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={editingStudent.name}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Course</label>
-                    <input
-                      type="text"
-                      name="course"
-                      value={editingStudent.course}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Joining Date</label>
-                    <input
-                      type="date"
-                      name="joiningDate"
-                      value={editingStudent.joiningDate}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={editingStudent.email}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-actions">
-                    <button
-                      type="button"
-                      className="cancel-btn"
-                      onClick={() => {
-                        setIsEditing(false);
-                        setEditingStudent(null);
-                      }}
-                    >
-                      Cancel
-                    </button>
-                    <button type="submit" className="save-btn">
-                      Save Changes
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
         </main>
       </div>
     </div>

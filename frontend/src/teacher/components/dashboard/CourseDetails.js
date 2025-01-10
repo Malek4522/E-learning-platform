@@ -58,19 +58,24 @@ function CourseDetails() {
 
   const handleAddLesson = async (lessonData) => {
     // Temporary fixed video URL - replace with actual video upload later
-    const TEMP_VIDEO_URL = "https://example.com/temp-video.mp4";
+    const TEMP_VIDEO_URL = "https://www.youtube.com/watch?v=HashMbjv0qg";
+    const TEMP_DOC_URL = "https://www.webpedago.com/media/file/0o5LOTQE/exemple-de-fichier.docx";
     
     const lessonToAdd = {
+      title: lessonData.title,
       content: {
         video: {
           video_url: TEMP_VIDEO_URL,
           description: lessonData.description || "Temporary video description",
           duration: parseInt(lessonData.duration) || 0
         },
-        document: null
+        document: {
+          doc_url: TEMP_DOC_URL,
+          description: lessonData.description || "Temporary document description"
+        }
       },
       quiz: {
-        quiz_title: lessonData.quiz.quiz_title,
+        quiz_title: lessonData.title,
         questions: lessonData.quiz.questions.map(q => ({
           question_text: q.question_text,
           options: q.options,
@@ -223,7 +228,7 @@ function CourseDetails() {
                       {chapter.lessons && chapter.lessons.length > 0 ? (
                         chapter.lessons.map((lesson) => (
                           <div key={lesson._id} className="lesson-item">
-                            <h4>{lesson.quiz.quiz_title}</h4>
+                            <h4>{lesson.title}</h4>
                             <span>{lesson.content.video?.duration || 0} minutes</span>
                             <button 
                               className="delete-lesson-btn"

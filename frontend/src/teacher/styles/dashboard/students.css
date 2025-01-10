@@ -57,13 +57,28 @@
 .student-info {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
 .student-info img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.student-info img:hover {
+  transform: scale(1.1);
+  border-color: #4a90e2;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.student-info span {
+  font-weight: 500;
+  color: #2c3e50;
 }
 
 .action-buttons {
@@ -79,15 +94,6 @@
   transition: all 0.3s ease;
 }
 
-.edit-btn {
-  background-color: #e3f2fd;
-  color: #1976d2;
-}
-
-.edit-btn:hover {
-  background-color: #bbdefb;
-}
-
 .delete-btn {
   background-color: #fee2e2;
   color: #dc2626;
@@ -95,78 +101,6 @@
 
 .delete-btn:hover {
   background-color: #fecaca;
-}
-
-/* Edit Form Styles */
-.edit-form-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.edit-form {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
-}
-
-.edit-form h2 {
-  margin-bottom: 1.5rem;
-  color: #333;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.form-actions button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.cancel-btn {
-  background: #f1f1f1;
-  color: #666;
-}
-
-.save-btn {
-  background: #2196f3;
-  color: white;
-}
-
-.save-btn:hover {
-  background: #1976d2;
 }
 
 @media (max-width: 768px) {
@@ -182,11 +116,5 @@
   .students-table {
     display: block;
     overflow-x: auto;
-  }
-
-  .edit-form {
-    width: 95%;
-    margin: 1rem;
-    padding: 1rem;
   }
 }

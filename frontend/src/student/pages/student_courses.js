@@ -1,66 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useProtectedRequest from "../../hooks/useProtectedRequest";
 import "../styles/StudentCourses.css";
 
 function StudentCourses() {
   const navigate = useNavigate();
   const [searchKey, setSearchKey] = useState("");
+  const [courses, setCourses] = useState([]);
+  const { makeRequest: enrollCourse, status: enrollStatus } = useProtectedRequest(`/api/v1/users/courses/${searchKey}/enroll`, 'POST');
+  const { makeRequest: fetchCourses } = useProtectedRequest('/api/v1/courses/enrolled', 'GET');
 
-  const courses = [
-    {
-      id: 1,
-      title: "React JS Basic to Advance",
-      thumbnail: "https://placehold.co/400x250?text=React+Course",
-      lessons: 25,
-      duration: "20h",
-    },
-    {
-      id: 2,
-      title: "Basic to Advance Figma",
-      thumbnail: "https://placehold.co/400x250?text=Figma+Course",
-      lessons: 20,
-      duration: "15h",
-    },
-    {
-      id: 3,
-      title: "Mastering JS with Laravel",
-      thumbnail: "https://placehold.co/400x250?text=JavaScript",
-      lessons: 30,
-      duration: "25h",
-    },
-    {
-      id: 4,
-      title: "Python Programming",
-      thumbnail: "https://placehold.co/400x250?text=Python",
-      lessons: 28,
-      duration: "22h",
-    },
-    {
-      id: 5,
-      title: "UI/UX Design Fundamentals",
-      thumbnail: "https://placehold.co/400x250?text=UI/UX",
-      lessons: 18,
-      duration: "16h",
-    },
-    {
-      id: 6,
-      title: "Node.js Backend Development",
-      thumbnail: "https://placehold.co/400x250?text=Node.js",
-      lessons: 32,
-      duration: "28h",
-    },
-    {
-      id: 7,
-      title: "Full Stack Web Development",
-      thumbnail: "https://placehold.co/400x250?text=Fullstack",
-      lessons: 40,
-      duration: "35h",
-    },
-  ];
+  useEffect(() => {
+    loadCourses();
+  }, []);
 
-  const handleSearch = (e) => {
+  const loadCourses = async () => {
+    try {
+      const response = await fetchCourses();
+      if (response ) {      
+        setCourses(response);
+      }
+    } catch (error) {
+      console.error('Failed to fetch courses:', error);
+    }
+  };
+
+  const handleSearch = async (e) => {
     e.preventDefault();
-    // ... search logic
+    try {
+      await enrollCourse();
+      if (enrollStatus.type === 'success') {
+        setSearchKey('');
+        // Refresh the courses list after successful enrollment
+        await loadCourses();
+      }
+    } catch (error) {
+      console.error('Enrollment failed:', error);
+    }
   };
 
   const handleCourseClick = (courseId) => {
@@ -92,18 +68,18 @@ function StudentCourses() {
           <div className="courses-grid">
             {courses.map((course) => (
               <div
-                key={course.id}
+                key={course._id || course.id}
                 className="course-card"
-                onClick={() => handleCourseClick(course.id)}
+                onClick={() => handleCourseClick(course._id || course.id)}
               >
                 <div className="course-image">
-                  <img src={course.thumbnail} alt={course.title} />
+                  <img src={course.thumbnail || `https://placehold.co/400x250?text=${encodeURIComponent(course.title)}`} alt={course.title} />
                   <div className="course-stats">
                     <span>
-                      <i className="fas fa-book"></i> {course.lessons} Lessons
+                      <i className="fas fa-book"></i> {course.chapters?.reduce((total, chapter) => total + chapter.lessons.length, 0) || 0} Lessons
                     </span>
                     <span>
-                      <i className="fas fa-clock"></i> {course.duration}
+                      <i className="fas fa-clock"></i> {`${String(Math.floor((course.totalVideoDuration || 0) / 60)).padStart(2, '0')}h ${String((course.totalVideoDuration || 0) % 60).padStart(2, '0')}min`}
                     </span>
                   </div>
                 </div>

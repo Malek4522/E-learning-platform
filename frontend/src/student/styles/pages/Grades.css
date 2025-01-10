@@ -21,6 +21,22 @@
   border-bottom: 2px solid #e2e8f0;
 }
 
+.chapter-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.chapter-title {
+  color: #4a5568;
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
 .lesson-grade {
   background: #fff;
   border-radius: 12px;
@@ -38,7 +54,7 @@
 }
 
 .lesson-title {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: #2d3748;
   font-weight: 600;
 }
@@ -128,6 +144,10 @@
   }
 
   .lesson-title {
+    font-size: 1.2rem;
+  }
+
+  .chapter-title {
     font-size: 1.2rem;
   }
 }

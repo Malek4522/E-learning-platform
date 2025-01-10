@@ -7,20 +7,22 @@ const useProtectedRequest = (url, method = 'GET', initialRequestData = null) => 
   const [status, setStatus] = useState({ type: null, message: null });
 
   const makeRequest = async (requestData = initialRequestData) => {
-    const token = authService.getAccessToken();
+    let token = authService.getAccessToken();
     if (!token) {
       try {
-        const refreshResponse = await axios.post('/api/v1/auth/refresh', {}, {
+        const refreshResponse = await axios.post('/api/v1/auth/refresh-access', {}, {
           withCredentials: true
         });
         authService.setAccessToken(refreshResponse.data.accessToken);
       } catch (error) {
+        console.log(error);
         window.location.href = '/login';
         return;
       }
     }
 
     try {
+      token = authService.getAccessToken();
       const config = {
         method: method,
         url: url,
@@ -41,7 +43,7 @@ const useProtectedRequest = (url, method = 'GET', initialRequestData = null) => 
     } catch (error) {
       if (error.response?.status === 401) {
         try {
-          const refreshResponse = await axios.post('/api/v1/auth/refresh', {}, {
+          const refreshResponse = await axios.post('/api/v1/auth/refresh-access', {}, {
             withCredentials: true
           });
           

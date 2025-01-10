@@ -46,7 +46,7 @@ exports.updateProfile = async (req, res) => {
     }
 };
 
-// Get enrolled courses
+// Get enrolled courses(not in use)
 exports.getEnrolledCourses = async (req, res) => {
     try {
         const courses = await Course.find({ students_enrolled: req.user.id })
@@ -80,4 +80,86 @@ exports.enrollCourse_key = async (req, res) => {
         console.error('Error in enrollCourse:', error);
         res.status(500).json({ message: 'Error enrolling in course' });
     }
-}; 
+};
+
+// Get all enrolled students across teacher's courses with course details
+exports.getEnrolledStudents = async (req, res) => {
+    try {
+        // Get all courses where current user is the teacher
+        const teacherCourses = await Course.find({ teacher_id: req.user.id })
+            .select('title students_enrolled');
+
+        if (!teacherCourses.length) {
+            return res.json([]);
+        }
+
+        // Get all enrolled students across all courses
+        const enrollmentDetails = [];
+        
+        for (const course of teacherCourses) {
+            // Get student details for this course
+            const students = await User.find({
+                _id: { $in: course.students_enrolled }
+            }).select('_id email profile');
+
+            // Add each student's enrollment details
+            students.forEach(student => {
+                enrollmentDetails.push({
+                    studentId: student._id,
+                    name: `${student.profile.first_name} ${student.profile.last_name}`,
+                    courseName: course.title,
+                    courseId: course._id,
+                    joiningDate: student._id.getTimestamp(), // Using _id timestamp as enrollment date
+                    email: student.email
+                });
+            });
+        }
+
+        // Sort by most recent enrollments first
+        enrollmentDetails.sort((a, b) => b.joiningDate - a.joiningDate);
+
+        res.json(enrollmentDetails);
+    } catch (error) {
+        console.error('Error in getEnrolledStudents:', error);
+        res.status(500).json({ message: 'Error fetching enrolled students' });
+    }
+};
+// Remove student from course
+exports.removeStudentFromCourse = async (req, res) => {
+    try {
+        const { courseId, studentId } = req.body;
+
+        // Find the course
+        const course = await Course.findById(courseId);
+        
+        if (!course) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        // Check if user is the teacher of the course
+        if (course.teacher_id.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Not authorized to remove students from this course' });
+        }
+
+        // Check if student is enrolled
+        if (!course.students_enrolled.includes(studentId)) {
+            return res.status(400).json({ message: 'Student is not enrolled in this course' });
+        }
+
+        // Remove student from course
+        course.students_enrolled = course.students_enrolled.filter(
+            id => id.toString() !== studentId
+        );
+        
+        await course.save();
+
+        res.json({ message: 'Student successfully removed from course' });
+    } catch (error) {
+        console.error('Error in removeStudentFromCourse:', error);
+        res.status(500).json({ message: 'Error removing student from course' });
+    }
+};
+
+
+
+

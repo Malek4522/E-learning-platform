@@ -2,10 +2,13 @@
   padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .course-header {
   margin-bottom: 32px;
+  padding-right: 16px;
 }
 
 .course-header h1 {
@@ -14,9 +17,17 @@
   margin-bottom: 16px;
 }
 
-.course-stats {
+.student-app .course-stats {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  color: white;
   display: flex;
-  gap: 24px;
+  justify-content: space-between;
+  font-size: 0.9rem;
 }
 
 .course-stats span {
@@ -254,4 +265,45 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 24px;
+}
+
+.document-container {
+  margin: 20px 0;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.document-actions {
+  margin-bottom: 20px;
+}
+
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.download-btn:hover {
+  background-color: #45a049;
+}
+
+.document-preview {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.document-description {
+  color: #666;
+  line-height: 1.6;
+  margin-top: 15px;
 }

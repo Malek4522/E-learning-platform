@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from "react";
 import "../styles/pages/Grades.css";
+import useProtectedRequest from '../../hooks/useProtectedRequest';
 
 function Grades() {
-  const [grades, setGrades] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { data: grades, status, makeRequest :fetchGrades} = useProtectedRequest('/api/v1/progress/');
 
   useEffect(() => {
-    // Get grades from localStorage
-    const savedGrades = JSON.parse(
-      localStorage.getItem("studentGrades") || '{"courses":[]}'
-    );
-    setGrades(savedGrades);
-    setLoading(false);
+    fetchGrades();
   }, []);
 
-  if (loading) return <div className="grades-page">Loading grades...</div>;
-  if (!grades || grades.courses.length === 0) {
+  if (status.type === 'loading') return <div className="grades-page">Loading grades...</div>;
+  if (status.type === 'error') return <div className="grades-page">Error loading grades: {status.message}</div>;
+  if (!grades || grades.length === 0) {
     return (
       <div className="grades-page">
         <h1>My Grades</h1>
@@ -24,60 +20,61 @@ function Grades() {
     );
   }
 
+  // Group lessons by chapter for each course
+  const groupLessonsByChapter = (lessons) => {
+    const chapters = {};
+    lessons.forEach((lesson) => {
+      const chapterTitle = lesson.chapter_title || 'Uncategorized';
+      if (!chapters[chapterTitle]) {
+        chapters[chapterTitle] = [];
+      }
+      chapters[chapterTitle].push(lesson);
+    });
+    return chapters;
+  };
+
   return (
     <div className="grades-page">
       <h1>My Grades</h1>
 
-      {grades.courses.map((course) => (
-        <div key={course.id} className="course-section">
-          <h2 className="course-title">{course.title}</h2>
+      {grades.map((course) => {
+        const chapterGroups = groupLessonsByChapter(course.lessons_completed);
+        
+        return (
+          <div key={course.course_id} className="course-section">
+            <h2 className="course-title">{course.course_title}</h2>
 
-          {course.quizzes.map((quiz) => (
-            <div key={quiz.lessonId} className="lesson-grade">
-              <div className="lesson-header">
-                <h3 className="lesson-title">{quiz.lessonTitle}</h3>
-                <span
-                  className={`score ${
-                    quiz.score === 100
-                      ? "perfect"
-                      : quiz.score >= 70
-                      ? "good"
-                      : "needs-improvement"
-                  }`}
-                >
-                  {quiz.score}%
-                </span>
-              </div>
-
-              <div className="submission-info">
-                Submitted: {new Date(quiz.submittedAt).toLocaleDateString()}
-              </div>
-
-              <div className="questions-list">
-                {quiz.questions.map((question, index) => (
-                  <div key={index} className="question-item">
-                    <div className="question-text">{question.question}</div>
-                    <div className="answer-details">
-                      <p
-                        className={`your-answer ${
-                          question.correct ? "" : "wrong-answer"
+            {Object.entries(chapterGroups).map(([chapterTitle, lessons]) => (
+              <div key={chapterTitle} className="chapter-section">
+                <h3 className="chapter-title">{chapterTitle}</h3>
+                
+                {lessons.map((lesson) => (
+                  <div key={lesson.lesson_id} className="lesson-grade">
+                    <div className="lesson-header">
+                      <h4 className="lesson-title">{lesson.lesson_name || lesson.lesson_id}</h4>
+                      <span
+                        className={`score ${
+                          lesson.quiz_score === 100
+                            ? "perfect"
+                            : lesson.quiz_score >= 70
+                            ? "good"
+                            : "needs-improvement"
                         }`}
                       >
-                        Your answer: {question.yourAnswer}
-                      </p>
-                      {!question.correct && (
-                        <p className="correct-answer">
-                          Correct answer: {question.correctAnswer}
-                        </p>
-                      )}
+                        {lesson.quiz_score}%
+                      </span>
+                    </div>
+
+                    <div className="submission-info">
+                      Content Completed: {lesson.content_completed ? 'Yes' : 'No'}
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
-          ))}
-        </div>
-      ))}
+            ))}
+          </div>
+        );
+      })}
     </div>
   );
 }

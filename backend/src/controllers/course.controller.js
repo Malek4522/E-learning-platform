@@ -79,13 +79,28 @@ exports.getCourse = async (req, res) => {
         }
         
         // Convert to plain object with virtuals
-        const courseWithVirtuals = course.toObject({ virtuals: true });
-        res.json(courseWithVirtuals);
+        //const courseWithVirtuals = course.toObject({ virtuals: true });
+        res.json(course);
     } catch (error) {
         console.error('Error in getCourse:', error);
         res.status(500).json({ message: 'Error fetching course' });
     }
 };
+
+// Get enrolled courses for a user
+exports.getEnrolledCourses = async (req, res) => {
+    try {
+        const courses = await Course.find({ students_enrolled: req.user.id })
+            .populate('teacher_id', 'email profile')
+            .select('-key');
+
+        res.json(courses);
+    } catch (error) {
+        console.error('Error in getEnrolledCourses:', error);
+        res.status(500).json({ message: 'Error fetching enrolled courses' });
+    }
+};
+
 
 // Update course
 exports.updateCourse = async (req, res) => {

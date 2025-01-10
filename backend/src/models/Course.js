@@ -93,6 +93,7 @@ const chapterSchema = new Schema({
   },
   lessons: {
     type: [{
+      title: String,
       content: {
         type: contentSchema,
         required: true
@@ -184,7 +185,7 @@ courseSchema.index({ created_at: 1 }); // Index for created_at
 
 // Virtual for average rating
 courseSchema.virtual('averageRating').get(function() {
-  if (this.reviews.length === 0) return 0;
+  if (!this.reviews || this.reviews.length === 0) return 0;
   const sum = this.reviews.reduce((total, review) => total + review.rating, 0);
   return (sum / this.reviews.length).toFixed(1);
 });
@@ -192,6 +193,7 @@ courseSchema.virtual('averageRating').get(function() {
 // Virtual for total video duration
 courseSchema.virtual('totalVideoDuration').get(function() {
   let totalDuration = 0;
+  if (!this.chapters) return totalDuration;
   this.chapters.forEach(chapter => {
     chapter.lessons.forEach(lesson => {
       if (lesson.content.video && lesson.content.video.duration) {
@@ -205,6 +207,7 @@ courseSchema.virtual('totalVideoDuration').get(function() {
 // Virtual for total document count
 courseSchema.virtual('totalDocuments').get(function() {
   let docCount = 0;
+  if (!this.chapters) return docCount;
   this.chapters.forEach(chapter => {
     chapter.lessons.forEach(lesson => {
       if (lesson.content.document) {

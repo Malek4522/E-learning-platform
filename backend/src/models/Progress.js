@@ -5,10 +5,12 @@ const Schema = mongoose.Schema;
 const LessonCompletionSchema = new Schema({
     chapter_id: {
         type: Schema.Types.ObjectId,
+        ref: 'Course.chapters',
         required: true
     },
     lesson_id: {
         type: Schema.Types.ObjectId,
+        ref: 'Course.chapters.lessons',
         required: true
     },
     content_completed: {

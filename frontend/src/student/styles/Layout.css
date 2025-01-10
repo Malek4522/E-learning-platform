@@ -6,6 +6,12 @@
   padding: 12px 24px;
   background: white;
   border-bottom: 1px solid #eee;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 60px;
 }
 
 .student-app .header-left h1 {
@@ -92,12 +98,21 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: 1;
 }
 
 .student-app .main-content {
   display: flex;
   flex: 1;
   height: calc(100vh - 60px);
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 /* Sidebar Styles */
@@ -106,6 +121,13 @@
   background: white;
   border-right: 1px solid #eee;
   padding: 24px 0;
+  height: calc(100vh - 60px);
+  position: fixed;
+  top: 60px;
+  left: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 100;
 }
 
 .student-app .sidebar-item {
@@ -138,7 +160,62 @@
 /* Content Area */
 .student-app .content-area {
   flex: 1;
-  padding: 24px;
+  padding: 16px;
   background: #f5f5f5;
-  overflow-y: auto;
+  overflow-y: scroll;
+  height: calc(100vh - 60px);
+  position: fixed;
+  right: 0;
+  margin-left: 240px;
+  width: calc(100% - 240px);
+  margin-top: 60px;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+/* Custom Scrollbar Styling */
+.student-app .content-area::-webkit-scrollbar {
+  width: 8px;
+  position: absolute;
+  right: 0;
+}
+
+.student-app .content-area::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.student-app .content-area::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.student-app .content-area::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Ensure root stability */
+#root {
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+/* Ensure body and html are also stable */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Ensure content containers inside content-area have proper spacing */
+.student-app .content-area > * {
+  margin-bottom: 16px;
+}
+
+.student-app .content-area > *:last-child {
+  margin-bottom: 0;
 }

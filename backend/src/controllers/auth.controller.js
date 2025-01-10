@@ -62,17 +62,23 @@ const setRefreshTokenCookie = (res, refreshToken) => {
     ...cookie,
     path: '/api/v1/auth/logout' // Restrict cookie to logout endpoint
   });
+  res.cookie('refreshToken', refreshToken, {
+    ...cookie,
+    path: '/api/v1/auth/refresh-access' // Restrict cookie to refresh-access endpoint
+  });
 };
 
 const clearRefreshTokenCookie = (res) => {
   res.clearCookie('refreshToken', {
-    ...cookie,
-    path: '/api/auth/refresh'
+    path: '/api/v1/auth/refresh'
   });
 
   res.clearCookie('refreshToken', {
-    ...cookie,
-    path: '/api/auth/logout'
+    path: '/api/v1/auth/logout'
+  });
+
+  res.clearCookie('refreshToken', {
+    path: '/api/v1/auth/refresh-access'
   });
 };
 
@@ -242,7 +248,7 @@ const authController = {
   // Refresh token - simplified
   refresh: async (req, res) => {
     try {
-        const { id, email } = req.admin || req.user; // Extract id and email from req
+        const { id,} = req.admin || req.user; // Extract id and email from req
 
         const refreshToken = req.cookies['refreshToken'];
         let entity;
@@ -289,6 +295,41 @@ const authController = {
         res.status(500).json({ message: error.message });
     }
   },
+  // Refresh access token only - refresh token remains unchanged
+  refreshAccess: async (req, res) => {
+    try {
+      const refreshToken = req.cookies['refreshToken'];
+      if (!refreshToken) {
+        return res.status(401).json({ message: 'Refresh token is required' });
+      }
+
+      // Try to find user with valid refresh token
+      let entity = await User.findOne({
+        'refreshTokens.token': refreshToken,
+        'refreshTokens.expiresAt': { $gt: new Date() }
+      });
+
+      // If not found in users, try admins
+      if (!entity) {
+        entity = await Admin.findOne({
+          'refreshTokens.token': refreshToken, 
+          'refreshTokens.expiresAt': { $gt: new Date() }
+        });
+      }
+
+      if (!entity) {
+        return res.status(401).json({ message: 'Invalid refresh token' });
+      }
+
+      // Generate new access token only
+      const Token = generateTokens(entity);
+
+      res.json({accessToken: Token.accessToken });
+
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
 
   // Get current user
   getCurrentUser: async (req, res) => {
@@ -310,7 +351,7 @@ const authController = {
   // Add logout endpoint
   logout: async (req, res) => {
     try {
-      const { refreshToken } = req.body;
+      const refreshToken = req.cookies.refreshToken;
       
       if (!refreshToken) {
         return res.status(400).json({ message: 'Refresh token is required' });
@@ -333,6 +374,7 @@ const authController = {
           await admin.removeRefreshToken(refreshToken);
         }
       }
+      clearRefreshTokenCookie(res);
 
       res.json({ message: 'Logged out successfully' });
     } catch (error) {
