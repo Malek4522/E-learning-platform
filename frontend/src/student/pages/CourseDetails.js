@@ -133,11 +133,17 @@ function CourseDetails() {
       [selectedLesson.id]: true,
     };
 
+    // Find the chapter that contains this lesson
+    const chapter = course.chapters.find(chapter => 
+      chapter.lessons.some(lesson => lesson.id === selectedLesson.id)
+    );
+
+    
 
     // Use useProtectedRequest to update progress
     updateProgress({
       courseId: courseId,
-      chapterId: selectedContent.id,
+      chapterId: chapter._id,
       lessonId: selectedLesson.id,
       contentCompleted: true,
       quizScore: score
