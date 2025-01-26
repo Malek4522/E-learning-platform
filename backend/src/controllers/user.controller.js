@@ -160,6 +160,62 @@ exports.removeStudentFromCourse = async (req, res) => {
     }
 };
 
+exports.getDashboard = async (req, res) => {
+    try {
+      const userId = req.user.id;
+      console.log("Fetching for user:", userId);
+  
+      // Find courses where the user is enrolled
+      const courses = await Course.find({
+        students_enrolled: userId,
+      }).select("_id title chapters.chapter_title chapters.lessons");
+  
+      console.log("Found courses:", courses.length);
+  
+      const allLessons = [];
+  
+      courses.forEach((course) => {
+        course.chapters.forEach((chapter) => {
+          if (chapter.lessons && chapter.lessons.length > 0) {
+            chapter.lessons.forEach((lesson) => {
+              allLessons.push({
+                _id: lesson._id,
+                course_id: course._id,
+                course_title: course.title,
+                chapter_title: chapter.chapter_title,
+                lesson_title: lesson.title,
+                duration: lesson.content?.video?.duration || 0,
+                addedTime: lesson.createdAt || new Date(),
+              });
+            });
+          }
+        });
+      });
+  
+      console.log("Total lessons found:", allLessons.length);
+  
+      // Sort by lesson createdAt timestamp and get latest 5
+      const recentLessons = allLessons
+        .sort((a, b) => new Date(b.addedTime) - new Date(a.addedTime))
+        .slice(0, 5);
+  
+      console.log("Recent lessons:", recentLessons);
+  
+      res.status(200).json({
+        success: true,
+        newLessons: recentLessons,
+        totalLessons: recentLessons.length,
+      });
+    } catch (error) {
+      console.error("Dashboard error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Error fetching dashboard data",
+        error: error.message,
+      });
+    }
+  };
+
 
 
 

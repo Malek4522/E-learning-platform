@@ -1,38 +1,40 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import useProtectedRequest from "../../hooks/useProtectedRequest";
 import "../styles/Dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [newLessons, setNewLessons] = useState([]);
+  const { makeRequest: fetchDashboardData, status } = useProtectedRequest(
+    "/api/v1/users/dashboard",
+    "GET"
+  );
 
-  const newLessons = [
-    {
-      id: 1,
-      title: "React Hooks Deep Dive",
-      courseName: "React JS Basic to Advance",
-      addedTime: "Added 2 days ago",
-      courseId: "react-101",
-      icon: "📚",
-    },
-    {
-      id: 2,
-      title: "Advanced Component Patterns",
-      courseName: "React JS Basic to Advance",
-      addedTime: "Added 3 days ago",
-      icon: "📚",
-    },
-    {
-      id: 3,
-      title: "Figma Prototyping",
-      courseName: "Basic to Advance Figma",
-      addedTime: "Added 5 days ago",
-      icon: "🎨",
-    },
-  ];
+  const loadDashboardData = async () => {
+    try {
+      const response = await fetchDashboardData();
+      console.log("Dashboard response:", response);
+      if (response && response.success) {
+        setNewLessons(response.newLessons);
+      }
+    } catch (error) {
+      console.error("Error loading dashboard data:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [location.pathname]);
 
   const handleGoToLesson = (courseId) => {
     navigate(`/student/courses/${courseId}`);
   };
+
+  if (status.type === "loading") {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="student-app">
@@ -52,21 +54,26 @@ function Dashboard() {
         <div className="dashboard-content">
           <div className="new-lessons-section">
             <h2>New Lessons Added</h2>
-            {newLessons.length > 0 ? (
+            {newLessons && newLessons.length > 0 ? (
               <div className="lessons-list">
                 {newLessons.map((lesson) => (
-                  <div key={lesson.id} className="lesson-item">
+                  <div key={lesson._id} className="lesson-item">
                     <div className="lesson-icon">
                       <i className="fas fa-book"></i>
                     </div>
                     <div className="lesson-details">
-                      <h4>{lesson.title}</h4>
-                      <p>{lesson.courseName}</p>
-                      <span className="added-time">{lesson.addedTime}</span>
+                      <h4>{`${lesson.course_title} - ${lesson.chapter_title}`}</h4>
+                      <p>{lesson.lesson_title}</p>
+                      <span className="added-time">
+                        {new Date(lesson.addedTime).toLocaleString("en-US", {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}
+                      </span>
                     </div>
                     <button
                       className="go-to-lesson-btn"
-                      onClick={() => handleGoToLesson(lesson.courseId)}
+                      onClick={() => handleGoToLesson(lesson.course_id)}
                     >
                       <i className="fas fa-arrow-right"></i>
                     </button>
