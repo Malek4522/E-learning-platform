@@ -1,220 +1,199 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import "../styles/StudentTable.css";
+import useProtectedRequest from "../../hooks/useProtectedRequest";
 
 function StudentTable() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [students, setStudents] = useState([
-    {
-      id: 1,
-      matricule: "STD001",
-      fullName: "John Doe",
-      course: "Web Development",
-      joinDate: "2024-01-15",
-      email: "john.doe@example.com"
-    },
-    {
-      id: 2,
-      matricule: "STD002",
-      fullName: "Jane Smith",
-      course: "Data Science",
-      joinDate: "2024-02-01",
-      email: "jane.smith@example.com"
-    }
-  ]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [students, setStudents] = useState([]);
+  const [editingStudent, setEditingStudent] = useState(null);
 
-  const [newStudent, setNewStudent] = useState({
-    matricule: "",
-    fullName: "",
-    course: "",
-    joinDate: "",
-    email: ""
-  });
+  // Initialize API endpoints
+  const { makeRequest: fetchStudents } = useProtectedRequest('/api/v1/admin/users', 'GET');
+  const { makeRequest: updateStudent } = useProtectedRequest('/api/v1/admin/users', 'PUT');
+  const { makeRequest: deleteStudent } = useProtectedRequest('/api/v1/admin/users', 'DELETE');
+
+  const loadStudents = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetchStudents();
+      const studentsList = response.filter(user => user.role === 'student');
+      setStudents(studentsList);
+      setError(null);
+    } catch (err) {
+      setError("Failed to fetch students: " + (err.response?.data?.message || err.message));
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadStudents();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewStudent(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (isEditMode) {
-      setStudents(prev => 
-        prev.map(student => 
-          student.id === newStudent.id ? newStudent : student
-        )
-      );
-    } else {
-      const id = students.length + 1;
-      setStudents(prev => [...prev, { ...newStudent, id }]);
+    if (editingStudent) {
+      setEditingStudent(prev => ({
+        ...prev,
+        [name]: value,
+        profile: {
+          ...prev.profile,
+          [name]: value
+        }
+      }));
     }
-    handleCloseModal();
   };
 
   const handleEdit = (student) => {
-    setNewStudent(student);
-    setIsEditMode(true);
+    setEditingStudent(student);
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      await updateStudent(
+        { 
+          email: editingStudent.email,
+          profile: editingStudent.profile
+        }, 
+        `/api/v1/admin/users/${editingStudent._id}`
+      );
+      setError(null);
+      handleCloseModal();
+      await loadStudents();
+    } catch (err) {
+      setError("Failed to update student: " + (err.response?.data?.message || err.message));
+      console.error(err);
+    }
+  };
+
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this student?')) {
-      setStudents(prev => prev.filter(student => student.id !== id));
+      try {
+        await deleteStudent(null, `/api/v1/admin/users/${id}`);
+        await loadStudents();
+        setError(null);
+      } catch (err) {
+        setError("Failed to delete student: " + (err.response?.data?.message || err.message));
+        console.error(err);
+      }
     }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setIsEditMode(false);
-    setNewStudent({
-      matricule: "",
-      fullName: "",
-      course: "",
-      joinDate: "",
-      email: ""
-    });
+    setEditingStudent(null);
+    setError(null);
   };
 
-  const handleAddNew = () => {
-    setIsEditMode(false);
-    setIsModalOpen(true);
-  };
-
-  const filteredStudents = students.filter(
-    (student) =>
-      student.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      student.matricule.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      student.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      student.course.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredStudents = students.filter(student =>
+    student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.profile?.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.profile?.last_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (isLoading) return <div className="loading">Loading...</div>;
 
   return (
     <div className="admin-app">
       <div className="student-table-container">
-        <div className="student-table-header">
+        {error && <div className="error-message">{error}</div>}
+        
+        <div className="table-header">
           <div className="header-left">
             <h2>Students</h2>
             <p>Total Students: {students.length}</p>
           </div>
-          <div className="action-bar">
+          <div className="header-right">
             <div className="search-bar">
               <input
                 type="text"
                 placeholder="Search students..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
               <i className="fas fa-search"></i>
             </div>
-            <button className="add-btn" onClick={handleAddNew}>
-              + Add New Student
-            </button>
           </div>
         </div>
 
-        <Modal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          title={isEditMode ? "Edit Student" : "Add New Student"}
-        >
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Matricule</label>
-              <input
-                type="text"
-                name="matricule"
-                value={newStudent.matricule}
-                onChange={handleInputChange}
-                required
-                placeholder="e.g., STD003"
-              />
-            </div>
-            <div className="form-group">
-              <label>Full Name</label>
-              <input
-                type="text"
-                name="fullName"
-                value={newStudent.fullName}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Course</label>
-              <select
-                name="course"
-                value={newStudent.course}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Course</option>
-                <option value="Web Development">Web Development</option>
-                <option value="Data Science">Data Science</option>
-                <option value="Mobile Development">Mobile Development</option>
-                <option value="Cloud Computing">Cloud Computing</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Date of Joining</label>
-              <input
-                type="date"
-                name="joinDate"
-                value={newStudent.joinDate}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                value={newStudent.email}
-                onChange={handleInputChange}
-                required
-                placeholder="example@email.com"
-              />
-            </div>
-            <div className="form-actions">
-              <button
-                type="button"
-                className="cancel-btn"
-                onClick={handleCloseModal}
-              >
-                Cancel
-              </button>
-              <button type="submit" className="submit-btn">
-                {isEditMode ? 'Update Student' : 'Add Student'}
-              </button>
-            </div>
-          </form>
-        </Modal>
+        {editingStudent && (
+          <Modal
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            title="Edit Student"
+          >
+            <form onSubmit={handleUpdate}>
+              {error && <div className="error-message">{error}</div>}
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={editingStudent.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>First Name</label>
+                <input
+                  type="text"
+                  name="first_name"
+                  value={editingStudent.profile?.first_name || ''}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Last Name</label>
+                <input
+                  type="text"
+                  name="last_name"
+                  value={editingStudent.profile?.last_name || ''}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-actions">
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={handleCloseModal}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="submit-btn">
+                  Update Student
+                </button>
+              </div>
+            </form>
+          </Modal>
+        )}
 
         <table className="student-table">
           <thead>
             <tr>
-              <th>Matricule</th>
-              <th>Full Name</th>
-              <th>Course</th>
-              <th>Date of Joining</th>
+              <th>Name</th>
               <th>Email</th>
+              <th>Progress</th>
+              <th>Join Date</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredStudents.map((student) => (
-              <tr key={student.id}>
-                <td>{student.matricule}</td>
-                <td>{student.fullName}</td>
-                <td>{student.course}</td>
-                <td>{new Date(student.joinDate).toLocaleDateString()}</td>
+              <tr key={student._id}>
+                <td>{`${student.profile?.first_name || ''} ${student.profile?.last_name || ''}`}</td>
                 <td>{student.email}</td>
+                <td>{student.progress || '0%'}</td>
+                <td>{new Date(student.createdAt).toLocaleDateString()}</td>
                 <td className="actions-cell">
                   <button 
                     className="edit-btn"
@@ -224,7 +203,7 @@ function StudentTable() {
                   </button>
                   <button 
                     className="delete-btn"
-                    onClick={() => handleDelete(student.id)}
+                    onClick={() => handleDelete(student._id)}
                   >
                     <i className="fas fa-trash"></i>
                   </button>

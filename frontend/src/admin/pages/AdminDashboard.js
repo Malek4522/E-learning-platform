@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import StudentTable from "../components/StudentTable";
-import CourseTable from "../components/CourseTable";
 import InstructorTable from "../components/InstructorTable";
 import Dashboard from "../components/Dashboard";
 import "./AdminDashboard.css";
@@ -26,8 +25,6 @@ function AdminDashboard() {
         return <StudentTable />;
       case "instructors":
         return <InstructorTable />;
-      case "courses":
-        return <CourseTable />;
       default:
         return <Dashboard />;
     }

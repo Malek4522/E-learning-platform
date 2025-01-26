@@ -1,37 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import "../styles/InstructorTable.css";
+import useProtectedRequest from "../../hooks/useProtectedRequest";
 
 function InstructorTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [instructors, setInstructors] = useState([
-    {
-      id: 1,
-      name: "Dr. John Smith",
-      specialization: "Computer Science",
-      email: "john.smith@example.com",
-      phone: "+1234567890",
-      courses: "Web Development, Python Programming"
-    },
-    {
-      id: 2,
-      name: "Prof. Sarah Johnson",
-      specialization: "Data Science",
-      email: "sarah.j@example.com",
-      phone: "+1987654321",
-      courses: "Machine Learning, Data Analytics"
-    }
-  ]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [instructors, setInstructors] = useState([]);
+  
+  // Initialize the hooks with proper URLs and methods
+  const { makeRequest: fetchInstructors } = useProtectedRequest('/api/v1/admin/users', 'GET');
+  const { makeRequest: addTeacher } = useProtectedRequest('/api/v1/admin/teachers', 'POST');
+  const { makeRequest: deleteTeacher } = useProtectedRequest(`/api/v1/admin/users`, 'DELETE');
 
   const [newInstructor, setNewInstructor] = useState({
-    name: "",
-    specialization: "",
     email: "",
-    phone: "",
-    courses: ""
+    password: "",
+    card_number: ""
   });
+
+  const loadInstructors = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetchInstructors();
+      const teachersList = response.filter(user => user.role === 'teacher');
+      setInstructors(teachersList);
+      setError(null);
+    } catch (err) {
+      setError("Failed to fetch instructors: " + (err.response?.data?.message || err.message));
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadInstructors();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,59 +48,91 @@ function InstructorTable() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isEditMode) {
-      setInstructors(prev => 
-        prev.map(instructor => 
-          instructor.id === newInstructor.id ? newInstructor : instructor
-        )
-      );
-    } else {
-      const id = instructors.length + 1;
-      setInstructors(prev => [...prev, { ...newInstructor, id }]);
+    try {
+      if (!newInstructor.email || !newInstructor.password) {
+        setError("Email and password are required");
+        return;
+      }
+
+      if (newInstructor.password.length < 6) {
+        setError("Password must be at least 6 characters long");
+        return;
+      }
+
+      if (!newInstructor.card_number || isNaN(newInstructor.card_number)) {
+        setError("Card number must be a valid number");
+        return;
+      }
+
+      const formData = {
+        email: newInstructor.email,
+        password: newInstructor.password,
+        card_number: parseInt(newInstructor.card_number)
+      };
+
+      try {
+        await addTeacher(formData);
+        setError(null);
+        handleCloseModal();
+        await loadInstructors();
+      } catch (err) {
+        if (err.response?.status === 400) {
+          const errorMessage = err.response.data.message || 
+                             err.response.data.errors?.[0]?.msg || 
+                             "Invalid input data";
+          setError(errorMessage);
+        } else if (err.response?.status === 409) {
+          setError("An account with this email already exists");
+        } else {
+          setError("Failed to add instructor. Please try again.");
+        }
+        console.error('Error adding instructor:', err.response?.data || err);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+      console.error('Error in form submission:', err);
     }
-    handleCloseModal();
   };
 
-  const handleEdit = (instructor) => {
-    setNewInstructor(instructor);
-    setIsEditMode(true);
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this instructor?')) {
-      setInstructors(prev => prev.filter(instructor => instructor.id !== id));
+      try {
+        await deleteTeacher(null, `/api/v1/admin/users/${id}`);
+        await loadInstructors();
+        setError(null);
+      } catch (err) {
+        setError("Failed to delete instructor: " + (err.response?.data?.message || err.message));
+        console.error(err);
+      }
     }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setIsEditMode(false);
+    setError(null);
     setNewInstructor({
-      name: "",
-      specialization: "",
       email: "",
-      phone: "",
-      courses: ""
+      password: "",
+      card_number: ""
     });
   };
 
-  const handleAddNew = () => {
-    setIsEditMode(false);
-    setIsModalOpen(true);
-  };
-
   const filteredInstructors = instructors.filter(instructor =>
-    Object.values(instructor).some(value =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    instructor.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    instructor.profile?.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    instructor.profile?.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (instructor.card_number && instructor.card_number.toString().includes(searchTerm))
   );
+
+  if (isLoading) return <div className="loading">Loading...</div>;
 
   return (
     <div className="admin-app">
       <div className="instructor-table-container">
+        {error && <div className="error-message">{error}</div>}
+        
         <div className="table-header">
           <div className="header-left">
             <h2>Instructors</h2>
@@ -111,7 +150,7 @@ function InstructorTable() {
             </div>
             <button 
               className="add-instructor-btn"
-              onClick={handleAddNew}
+              onClick={() => setIsModalOpen(true)}
             >
               + Add New Instructor
             </button>
@@ -121,67 +160,43 @@ function InstructorTable() {
         <Modal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          title={isEditMode ? "Edit Instructor" : "Add New Instructor"}
+          title="Add New Instructor"
         >
           <form onSubmit={handleSubmit}>
+            {error && <div className="error-message">{error}</div>}
             <div className="form-group">
-              <label>Full Name</label>
-              <input
-                type="text"
-                name="name"
-                value={newInstructor.name}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Specialization</label>
-              <select
-                name="specialization"
-                value={newInstructor.specialization}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Specialization</option>
-                <option value="Computer Science">Computer Science</option>
-                <option value="Data Science">Data Science</option>
-                <option value="Web Development">Web Development</option>
-                <option value="Mobile Development">Mobile Development</option>
-                <option value="Cloud Computing">Cloud Computing</option>
-                <option value="Artificial Intelligence">Artificial Intelligence</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Email</label>
+              <label>Email *</label>
               <input
                 type="email"
                 name="email"
                 value={newInstructor.email}
                 onChange={handleInputChange}
                 required
-                placeholder="example@email.com"
+                placeholder="Enter email address"
               />
             </div>
             <div className="form-group">
-              <label>Phone Number</label>
+              <label>Password *</label>
               <input
-                type="tel"
-                name="phone"
-                value={newInstructor.phone}
+                type="password"
+                name="password"
+                value={newInstructor.password}
                 onChange={handleInputChange}
                 required
-                placeholder="+1234567890"
+                minLength={6}
+                placeholder="Minimum 6 characters"
               />
             </div>
             <div className="form-group">
-              <label>Courses (comma-separated)</label>
+              <label>Card Number *</label>
               <input
-                type="text"
-                name="courses"
-                value={newInstructor.courses}
+                type="number"
+                name="card_number"
+                value={newInstructor.card_number}
                 onChange={handleInputChange}
                 required
-                placeholder="e.g., Web Development, Python Programming"
+                min="1"
+                placeholder="Enter card number"
               />
             </div>
             <div className="form-actions">
@@ -193,7 +208,7 @@ function InstructorTable() {
                 Cancel
               </button>
               <button type="submit" className="submit-btn">
-                {isEditMode ? 'Update Instructor' : 'Add Instructor'}
+                Add Instructor
               </button>
             </div>
           </form>
@@ -202,32 +217,22 @@ function InstructorTable() {
         <table className="instructor-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Specialization</th>
               <th>Email</th>
-              <th>Phone</th>
-              <th>Courses</th>
+              <th>Card Number</th>
+              <th>Role</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredInstructors.map((instructor) => (
-              <tr key={instructor.id}>
-                <td>{instructor.name}</td>
-                <td>{instructor.specialization}</td>
+              <tr key={instructor._id}>
                 <td>{instructor.email}</td>
-                <td>{instructor.phone}</td>
-                <td>{instructor.courses}</td>
+                <td>{instructor.card_number || 'Not assigned'}</td>
+                <td>{instructor.role}</td>
                 <td className="actions-cell">
                   <button 
-                    className="edit-btn"
-                    onClick={() => handleEdit(instructor)}
-                  >
-                    <i className="fas fa-edit"></i>
-                  </button>
-                  <button 
                     className="delete-btn"
-                    onClick={() => handleDelete(instructor.id)}
+                    onClick={() => handleDelete(instructor._id)}
                   >
                     <i className="fas fa-trash"></i>
                   </button>

@@ -2,16 +2,19 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import '../styles/Layout.css';
 
 function Layout() {
   return (
-    <div className="dashboard-layout">
+    <div className="admin-layout">
       <Header />
-      <div className="dashboard-container">
+      <div className="admin-container">
         <Sidebar />
-        <main className="main-content">
-          <Outlet />
-        </main>
+        <div className="admin-main">
+          <div className="admin-content">
+            <Outlet />
+          </div>
+        </div>
       </div>
     </div>
   );

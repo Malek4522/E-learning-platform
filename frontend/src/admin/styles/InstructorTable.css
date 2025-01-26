@@ -170,4 +170,34 @@
         justify-content: center;
     }
 }
+
+.error-message {
+    color: #d32f2f;
+    background-color: #ffebee;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.form-group label::after {
+    content: " *";
+    color: #d32f2f;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    min-height: 80px;
+}
   

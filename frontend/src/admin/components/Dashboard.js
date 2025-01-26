@@ -1,76 +1,91 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   MdPeople,
   MdSchool,
   MdPersonAdd,
   MdTrendingUp,
-  MdArrowForward
+  MdArrowForward,
+  MdWavingHand
 } from "react-icons/md";
 import { GiTeacher } from "react-icons/gi";
 import "../styles/Dashboard.css";
-
-const recentActivities = [
-  {
-    id: 1,
-    type: "New Student",
-    description: "John Doe registered as a student",
-    time: "2 hours ago",
-    icon: <MdPersonAdd className="activity-icon student-icon" />,
-    link: "/admin/students/1",
-    linkText: "View Profile"
-  },
-  {
-    id: 2,
-    type: "New Course",
-    description: "Web Development course was added",
-    time: "3 hours ago",
-    icon: <MdSchool className="activity-icon course-icon" />,
-    link: "/admin/courses/1",
-    linkText: "View Course"
-  },
-  {
-    id: 3,
-    type: "New Instructor",
-    description: "Sarah Johnson joined as instructor",
-    time: "5 hours ago",
-    icon: <GiTeacher className="activity-icon instructor-icon" />,
-    link: "/admin/instructors/1",
-    linkText: "View Profile"
-  },
-  {
-    id: 4,
-    type: "New Student",
-    description: "Alice Smith enrolled in Data Science",
-    time: "6 hours ago",
-    icon: <MdPersonAdd className="activity-icon student-icon" />,
-    link: "/admin/students/2",
-    linkText: "View Profile"
-  },
-  {
-    id: 5,
-    type: "Course Update",
-    description: "Python Programming syllabus updated",
-    time: "8 hours ago",
-    icon: <MdSchool className="activity-icon course-icon" />,
-    link: "/admin/courses/2",
-    linkText: "View Course"
-  }
-];
+import useProtectedRequest from "../../hooks/useProtectedRequest";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const [stats, setStats] = useState({
+    totalStudents: 0,
+    totalInstructors: 0,
+    totalCourses: 0,
+    recentActivities: []
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const { makeRequest: fetchStats } = useProtectedRequest('/api/v1/admin/dashboard-stats', 'GET');
+
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const response = await fetchStats();
+        setStats(response);
+        setError(null);
+      } catch (err) {
+        setError("Failed to fetch dashboard statistics");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadStats();
+  }, []);
 
   const handleNavigate = (path) => {
     navigate(path);
   };
 
+  const getActivityIcon = (type) => {
+    switch (type) {
+      case 'NEW_STUDENT':
+        return <MdPersonAdd className="activity-icon student-icon" />;
+      case 'NEW_INSTRUCTOR':
+        return <GiTeacher className="activity-icon instructor-icon" />;
+      case 'NEW_COURSE':
+      case 'COURSE_UPDATE':
+        return <MdSchool className="activity-icon course-icon" />;
+      default:
+        return <MdPersonAdd className="activity-icon" />;
+    }
+  };
+
+  const formatTime = (timestamp) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now - date;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    
+    if (hours < 1) return 'Just now';
+    if (hours === 1) return '1 hour ago';
+    if (hours < 24) return `${hours} hours ago`;
+    return `${Math.floor(hours / 24)} days ago`;
+  };
+
+  if (isLoading) return <div className="loading">Loading...</div>;
+  if (error) return <div className="error-message">{error}</div>;
+
   return (
     <div className="admin-app">
       <div className="dashboard-content">
         <div className="dashboard-welcome">
-          <h1>Welcome Back!</h1>
-          <p>Here's what's happening with your platform today.</p>
+          <div className="welcome-icon">
+            <MdWavingHand />
+          </div>
+          <div className="welcome-content">
+            <h1>Welcome Back!</h1>
+            <p>Here's what's happening with your platform today.</p>
+          </div>
         </div>
 
         <div className="dashboard-stats">
@@ -80,33 +95,35 @@ function Dashboard() {
             </div>
             <div className="stat-details">
               <h3>Total Students</h3>
-              <p>1,234</p>
+              <p>{stats.totalStudents}</p>
               <div className="stat-trend">
-                <MdTrendingUp /> +5% this week
+                <MdTrendingUp /> Active Users
               </div>
             </div>
           </div>
-          <div className="stat-card">
-            <div className="stat-icon courses">
-              <MdSchool />
-            </div>
-            <div className="stat-details">
-              <h3>Total Courses</h3>
-              <p>56</p>
-              <div className="stat-trend">
-                <MdTrendingUp /> +2% this week
-              </div>
-            </div>
-          </div>
+
           <div className="stat-card">
             <div className="stat-icon instructors">
               <GiTeacher />
             </div>
             <div className="stat-details">
               <h3>Total Instructors</h3>
-              <p>89</p>
+              <p>{stats.totalInstructors}</p>
               <div className="stat-trend">
-                <MdTrendingUp /> +3% this week
+                <MdTrendingUp /> Active Teachers
+              </div>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon courses">
+              <MdSchool />
+            </div>
+            <div className="stat-details">
+              <h3>Total Courses</h3>
+              <p>{stats.totalCourses}</p>
+              <div className="stat-trend">
+                <MdTrendingUp /> Available Courses
               </div>
             </div>
           </div>
@@ -115,22 +132,24 @@ function Dashboard() {
         <div className="activities-container">
           <h2>Recent Activities</h2>
           <div className="activities-list custom-scrollbar">
-            {recentActivities.map((activity) => (
+            {stats.recentActivities.map((activity) => (
               <div key={activity.id} className="activity-item">
                 <div className="activity-icon-wrapper">
-                  {activity.icon}
+                  {getActivityIcon(activity.type)}
                 </div>
                 <div className="activity-details">
-                  <h3>{activity.type}</h3>
+                  <h3>{activity.type.replace(/_/g, ' ')}</h3>
                   <p>{activity.description}</p>
                   <div className="activity-footer">
-                    <span className="activity-time">{activity.time}</span>
-                    <button 
-                      className="activity-link"
-                      onClick={() => handleNavigate(activity.link)}
-                    >
-                      {activity.linkText} <MdArrowForward />
-                    </button>
+                    <span className="activity-time">{formatTime(activity.time)}</span>
+                    {activity.metadata?.link && (
+                      <button 
+                        className="activity-link"
+                        onClick={() => handleNavigate(activity.metadata.link)}
+                      >
+                        View Details <MdArrowForward />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

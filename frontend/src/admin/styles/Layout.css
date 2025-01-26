@@ -1,0 +1,184 @@
+.admin-layout {
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.admin-container {
+  display: flex;
+  margin-top: 70px;
+  min-height: calc(100vh - 70px);
+}
+
+.admin-main {
+  flex: 1;
+  margin-left: 250px;
+  padding: 24px;
+  background-color: #f8fafc;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+}
+
+.admin-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: transparent;
+}
+
+/* Card styles */
+.admin-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  margin-bottom: 24px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Table styles */
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 16px 0;
+}
+
+.admin-table th {
+  background: #f8fafc;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+  color: #4b5563;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.admin-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #1f2937;
+}
+
+.admin-table tr:hover td {
+  background: #f9fafb;
+}
+
+/* Button styles */
+.admin-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-btn-primary {
+  background: #1a56db;
+  color: white;
+}
+
+.admin-btn-primary:hover {
+  background: #1e40af;
+}
+
+.admin-btn-secondary {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.admin-btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+/* Form styles */
+.admin-form-group {
+  margin-bottom: 20px;
+}
+
+.admin-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.admin-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  transition: border-color 0.2s ease;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: #1a56db;
+  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+}
+
+/* Custom scrollbar */
+.admin-main::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-main::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.admin-main::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.admin-main::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Loading states */
+.admin-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #6b7280;
+}
+
+.admin-loading-spinner {
+  border: 3px solid #f3f4f6;
+  border-top: 3px solid #1a56db;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin-right: 12px;
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-main {
+    margin-left: 0;
+    padding: 16px;
+  }
+  
+  .admin-card {
+    padding: 16px;
+  }
+  
+  .admin-table {
+    display: block;
+    overflow-x: auto;
+  }
+} 
