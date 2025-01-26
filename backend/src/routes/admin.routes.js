@@ -14,6 +14,9 @@ router.put('/users/:id', adminController.updateUser);
 router.delete('/users/:id', adminController.deleteUser);
 
 // Teacher management
-router.post('/teachers', validateRegistration, adminController.registerTeacher);
+router.post('/teachers', adminController.registerTeacher);
+
+// Add this new route
+router.get('/dashboard-stats', adminController.getDashboardStats);
 
 module.exports = router; 
