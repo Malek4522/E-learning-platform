@@ -8,6 +8,7 @@ const courseRoutes = require('./course.routes');
 const forumRoutes = require('./forum.routes');
 const progressRoutes = require('./progress.routes');
 const userRoutes = require('./user.routes');
+const contactRoutes = require('./contact.routes');
 
 // API Routes
 router.use('/v1/auth', authRoutes);
@@ -15,6 +16,7 @@ router.use('/v1/admin', adminRoutes);
 router.use('/v1/courses', courseRoutes);
 router.use('/v1/forums', forumRoutes);
 router.use('/v1/progress', progressRoutes);
+router.use('/v1/contacts', contactRoutes);
 router.use('/v1/users', userRoutes);
 
 // Health check endpoint

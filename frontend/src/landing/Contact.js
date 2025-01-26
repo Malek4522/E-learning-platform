@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Navbar from './components/Navbar';
 import styles from './Contact.module.css'; // Import the CSS module
 
@@ -6,11 +7,13 @@ function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     subject: '',
     message: ''
   });
 
   const [successMessage, setSuccessMessage] = useState('');
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,12 +23,20 @@ function Contact() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can add logic to send the form data to your backend or email service
-    // For now, we'll just display a success message
-    setSuccessMessage('Thank you for contacting us! We will get back to you soon.');
-    setFormData({ name: '', email: '', subject: '', message: '' }); // Reset form
+    setError('');
+    setSuccessMessage('');
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/v1/contacts/', formData);
+
+      setSuccessMessage('Thank you for contacting us! We will get back to you soon.');
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' }); // Reset form
+    } catch (err) {
+      setError('Failed to send message. Please try again later.');
+      console.error('Error sending contact form:', err);
+    }
   };
 
   return (
@@ -38,20 +49,9 @@ function Contact() {
         </header>
         <section className={styles.contactSection}>
           <h2>Get in Touch</h2>
-          {successMessage && <p className="success-message">{successMessage}</p>}
+          {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
+          {error && <p className={styles.errorMessage}>{error}</p>}
           <form className={styles.contactForm} onSubmit={handleSubmit}>
-            <div className={styles.formGroup}>
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Enter your name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
             <div className={styles.formGroup}>
               <label htmlFor="email">Email</label>
               <input
@@ -60,6 +60,30 @@ function Contact() {
                 name="email"
                 placeholder="Enter your email"
                 value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="phone">Phone Number</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="Enter your phone number"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your name"
+                value={formData.name}
                 onChange={handleChange}
                 required
               />
