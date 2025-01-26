@@ -19,10 +19,6 @@ function Navbar() {
       </div>
 
       <div className="navbar-actions">
-        <button className="notification-btn">
-          <i className="fas fa-bell"></i>
-          <span className="notification-badge">3</span>
-        </button>
         <ProfileDropdown />
       </div>
     </nav>

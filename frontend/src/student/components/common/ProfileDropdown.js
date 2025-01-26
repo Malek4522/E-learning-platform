@@ -9,7 +9,7 @@ function ProfileDropdown() {
   const navigate = useNavigate();
   const { logout, status } = useLogout();
 
-  const instructor = {
+  const student = {
     firstName: 'Profile',
     lastName: '',
     email: '',
@@ -34,7 +34,6 @@ function ProfileDropdown() {
     } catch (error) {
       console.error('Logout failed:', error);
     }
-    
   };
 
   return (
@@ -43,21 +42,18 @@ function ProfileDropdown() {
         className="profile-trigger"
         onClick={() => setIsOpen(!isOpen)}
       >
-        
-        <span className="profile-name">{instructor.firstName}</span>
+        <span className="profile-name">{student.firstName}</span>
         <i className={`fas fa-chevron-${isOpen ? 'up' : 'down'}`}></i>
       </button>
 
       {isOpen && (
         <div className="dropdown-menu">
-          
-
           <div className="dropdown-content">
-            <Link to="/teacher/profile" className="dropdown-item">
+            <Link to="/student/profile" className="dropdown-item">
               <i className="fas fa-user"></i>
               My Profile
             </Link>
-            <Link to="/teacher/settings" className="dropdown-item">
+            <Link to="/student/settings" className="dropdown-item">
               <i className="fas fa-cog"></i>
               Settings
             </Link>
