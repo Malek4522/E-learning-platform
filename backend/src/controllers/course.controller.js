@@ -191,4 +191,42 @@ exports.deleteCourse = async (req, res) => {
         console.error('Error in deleteCourse:', error);
         res.status(500).json({ message: 'Error deleting course' });
     }
+};
+
+// Get preview of all courses for non-authenticated users
+exports.CoursesPreview = async (req, res) => {
+    try {
+        const courses = await Course.find()
+            .populate('teacher_id', 'email profile')
+            .select('title description categories chapters.title chapters.lessons.duration');
+        
+        // Prepare preview response for each course
+        const coursePreviews = courses.map(course => {
+            const totalLessons = course.chapters.reduce((acc, chapter) => 
+                acc + (chapter.lessons ? chapter.lessons.length : 0), 0);
+            
+            const totalDuration = course.chapters.reduce((acc, chapter) => {
+                if (!chapter.lessons) return acc;
+                return acc + chapter.lessons.reduce((lessonAcc, lesson) => 
+                    lessonAcc + (lesson.duration || 0), 0);
+            }, 0);
+
+            return {
+                id: course._id,
+                title: course.title,
+                description: course.description,
+                categories: course.categories,
+                teacher: course.teacher_id,
+                totalChapters: course.chapters.length,
+                totalLessons: totalLessons,
+                totalDuration: totalDuration,
+                chapterTitles: course.chapters.map(chapter => chapter.title)
+            };
+        });
+        
+        res.json(coursePreviews);
+    } catch (error) {
+        console.error('Error in getCoursePreview:', error);
+        res.status(500).json({ message: 'Error fetching course previews' });
+    }
 }; 

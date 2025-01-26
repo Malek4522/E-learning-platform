@@ -3,6 +3,9 @@ const router = express.Router();
 const courseController = require('../controllers/course.controller');
 const {authenticate} = require('../middleware/auth.middleware');
 
+// Public route for course previews
+router.get('/preview', courseController.CoursesPreview);
+
 // Apply auth middleware to all routes
 router.use(authenticate);
 
