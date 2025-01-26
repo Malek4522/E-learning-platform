@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Course = require('../models/Course');
 const Forum = require('../models/Forum');
 const Progress = require('../models/Progress');
+const Activity = require('../models/Activity');
 const mongoose = require('mongoose');
 
 exports.getUsers = async (req, res) => {
@@ -201,7 +202,7 @@ exports.deleteUser = async (req, res) => {
 
 exports.registerTeacher = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, card_number } = req.body;
 
         // Check if user already exists
         const existingUser = await User.findOne({ email });
@@ -209,11 +210,20 @@ exports.registerTeacher = async (req, res) => {
             return res.status(400).json({ message: 'Email already exists' });
         }
 
+        // Check if card number is already in use
+        if (card_number) {
+            const existingCard = await User.findOne({ card_number });
+            if (existingCard) {
+                return res.status(400).json({ message: 'Card number already exists' });
+            }
+        }
+
         // Create new teacher account
         const teacher = new User({
             email,
             password,
             role: 'teacher',
+            card_number: parseInt(card_number),
             profile: {
                 first_name: 'Pending',
                 last_name: 'Setup'
@@ -221,6 +231,14 @@ exports.registerTeacher = async (req, res) => {
         });
 
         await teacher.save();
+
+        // Log the activity
+        await createActivity(
+            'NEW_INSTRUCTOR',
+            `New instructor ${teacher.email} registered`,
+            teacher._id,
+            { email: teacher.email }
+        );
 
         res.status(201).json({
             message: 'Teacher registered successfully',       
@@ -232,6 +250,65 @@ exports.registerTeacher = async (req, res) => {
             message: 'Error registering teacher',
             error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
+    }
+};
+
+exports.getDashboardStats = async (req, res) => {
+    try {
+        // Get counts from User collection
+        const studentsCount = await User.countDocuments({ role: 'student' });
+        const instructorsCount = await User.countDocuments({ role: 'teacher' });
+        
+        // Get count from Course collection
+        const coursesCount = await Course.countDocuments();
+
+        // Get recent activities
+        const recentActivities = await Activity.find()
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .populate('user_id', 'email profile.first_name profile.last_name')
+            .lean();
+
+        // Format activities for frontend
+        const formattedActivities = recentActivities.map(activity => ({
+            id: activity._id,
+            type: activity.type,
+            description: activity.description,
+            time: activity.createdAt,
+            user: {
+                id: activity.user_id._id,
+                name: `${activity.user_id.profile?.first_name || ''} ${activity.user_id.profile?.last_name || ''}`.trim() || activity.user_id.email,
+            },
+            metadata: activity.metadata
+        }));
+
+        res.json({
+            totalStudents: studentsCount,
+            totalInstructors: instructorsCount,
+            totalCourses: coursesCount,
+            recentActivities: formattedActivities
+        });
+    } catch (error) {
+        console.error('Error in getDashboardStats:', error);
+        res.status(500).json({ 
+            message: 'Error fetching dashboard statistics',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+};
+
+// Helper function to create activity
+const createActivity = async (type, description, userId, metadata = {}) => {
+    try {
+        const activity = new Activity({
+            type,
+            description,
+            user_id: userId,
+            metadata
+        });
+        await activity.save();
+    } catch (error) {
+        console.error('Error creating activity:', error);
     }
 };
 
