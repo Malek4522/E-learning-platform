@@ -34,21 +34,6 @@ function LandingPage() {
           <button className={styles.ctaButton} onClick={handleGetStartedClick}>Get Started</button>
         </div>
 
-        <div className={styles.roleSelection}>
-          <h2>Select Your Role</h2>
-          <div className={styles.buttonsContainer}>
-            <Link to="/teacher">
-              <button className={`${styles.roleButton} ${styles.teacher}`}>I'm a Teacher</button>
-            </Link>
-            <Link to="/student">
-              <button className={`${styles.roleButton} ${styles.student}`}>I'm a Student</button>
-            </Link>
-            <Link to="/admin">
-              <button className={`${styles.roleButton} ${styles.admin}`}>I'm an Admin</button>
-            </Link>
-          </div>
-        </div>
-
         <section className={styles.features}>
           <h2>Why Choose Us?</h2>
           <div className={styles.featureList}>

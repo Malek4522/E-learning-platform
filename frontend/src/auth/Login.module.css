@@ -1,3 +1,10 @@
+.loginWrapper {
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
+  background: #f4f6f8;
+}
+
 .loginContainer {
   padding: 2rem;
   text-align: center;

@@ -4,6 +4,8 @@
   text-align: center;
   background: #f4f6f8;
   min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
 }
 
 .courseCatalog h1 {

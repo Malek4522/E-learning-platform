@@ -4,6 +4,8 @@
   text-align: center;
   background: #f4f6f8;
   min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
   font-family: 'Arial', sans-serif;
 }
 
@@ -292,6 +294,8 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 2rem;
+  min-height: 200px;
+  padding: 2rem 0;
 }
 
 .footerColumn {

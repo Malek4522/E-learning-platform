@@ -51,46 +51,48 @@ function Login() {
   return (
     <>
       <Navbar />
-      <div className={styles.loginContainer}>
-        <h1>Login</h1>
-        {error && (
-          <div className={styles.errorMessage} data-testid="error-message">
-            {error}
-          </div>
-        )}
-        <form onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              placeholder="Enter your email"
-              onChange={(e) => setEmail(e.target.value)}
-              required
+      <div className={styles.loginWrapper}>
+        <div className={styles.loginContainer}>
+          <h1>Login</h1>
+          {error && (
+            <div className={styles.errorMessage} data-testid="error-message">
+              {error}
+            </div>
+          )}
+          <form onSubmit={handleSubmit}>
+            <div className={styles.formGroup}>
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                placeholder="Enter your email"
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={isLoading}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                placeholder="Enter your password"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={isLoading}
+              />
+            </div>
+            <button
+              type="submit"
+              className={styles.submitButton}
               disabled={isLoading}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              placeholder="Enter your password"
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={isLoading}
-            />
-          </div>
-          <button
-            type="submit"
-            className={styles.submitButton}
-            disabled={isLoading}
-          >
-            {isLoading ? "Logging in..." : "Login"}
-          </button>
-        </form>
+            >
+              {isLoading ? "Logging in..." : "Login"}
+            </button>
+          </form>
+        </div>
       </div>
     </>
   );

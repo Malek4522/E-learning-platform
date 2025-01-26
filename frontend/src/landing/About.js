@@ -102,24 +102,6 @@ function About() {
         <footer className={styles.footerSection}>
           <div className={styles.footerGrid}>
             <div className={styles.footerColumn}>
-              <h3>About Us</h3>
-              <ul>
-                <li><a href="/how-it-works">How it Works</a></li>
-                <li><a href="/affiliate-program">Affiliate Program</a></li>
-                <li><a href="/education-partners">Education Partners</a></li>
-                <li><a href="/careers">We are Hiring!</a></li>
-                <li><a href="/become-a-teacher">Become a Teacher</a></li>
-              </ul>
-            </div>
-            <div className={styles.footerColumn}>
-              <h3>Teachers</h3>
-              <ul>
-                <li><a href="/teachers/english">English Teachers</a></li>
-                <li><a href="/teachers/chinese">Chinese Teachers</a></li>
-                <li><a href="/teachers/french">French Teachers</a></li>
-              </ul>
-            </div>
-            <div className={styles.footerColumn}>
               <h3>Support</h3>
               <p>Contact us at: <a href="mailto:support@elearningplus.com">support@elearningplus.com</a></p>
             </div>

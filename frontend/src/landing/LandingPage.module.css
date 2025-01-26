@@ -1,6 +1,8 @@
 .landingContainer {
   padding-top: 70px; /* Add padding to account for fixed navbar */
   min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -87,44 +89,6 @@
 }
 
 .ctaButton:focus {
-  outline: 2px solid #ff4081; /* Pink */
-  outline-offset: 2px;
-}
-
-/* Role Selection */
-.roleSelection {
-  margin-top: 2rem;
-}
-
-.roleSelection h2 {
-  margin-bottom: 1rem;
-  color: white;
-  font-size: 1.2rem; /* Reduced font size */
-}
-
-.buttonsContainer {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.roleButton {
-  padding: 0.8rem 1.8rem; /* Adjusted padding */
-  border: none;
-  border-radius: 5px;
-  background: #ffffff; /* White */
-  color: #ff4081; /* Pink */
-  cursor: pointer;
-  font-size: 1rem; /* Reduced font size */
-  transition: background 0.3s, color 0.3s;
-}
-
-.roleButton:hover {
-  background: #ff4081; /* Pink */
-  color: white;
-}
-
-.roleButton:focus {
   outline: 2px solid #ff4081; /* Pink */
   outline-offset: 2px;
 }

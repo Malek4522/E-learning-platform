@@ -5,6 +5,8 @@
   background: #f4f6f8; /* Light background color */
   font-family: 'Arial', sans-serif;
   min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
 }
 
 .headerImage {
