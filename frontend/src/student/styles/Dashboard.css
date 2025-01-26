@@ -50,6 +50,7 @@
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(33, 150, 243, 0.1);
+  margin-bottom: 40px;
 }
 
 .student-app .new-lessons-section::before {
@@ -79,6 +80,8 @@
   max-height: 500px;
   overflow-y: auto;
   padding-right: 10px;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .student-app .lessons-list::-webkit-scrollbar {

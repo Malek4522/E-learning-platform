@@ -11,6 +11,9 @@ router.use(authenticate);
 router.get('/profile', userController.getProfile);
 router.put('/profile', validateProfileUpdate, userController.updateProfile);
 
+// Dashboard routes
+router.get("/dashboard", userController.getDashboard);
+
 // Course enrollment routes
 router.get('/courses', userController.getEnrolledCourses);
 router.post('/courses/:key/enroll', userController.enrollCourse_key);

@@ -101,7 +101,11 @@ const chapterSchema = new Schema({
       quiz: {
         type: quizSchema,
         required: true
-      }
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now, // Automatically sets the creation time
+      },
     }],
     required: [true, 'At least one lesson is required'],
     //validate: [arr => arr.length >= 1, 'At least one lesson is required']
