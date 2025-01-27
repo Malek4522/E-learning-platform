@@ -254,18 +254,31 @@
 .like-btn {
   background: none;
   border: none;
-  color: #868e96;
   cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
+  padding: 5px 10px;
+  display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  transition: color 0.2s ease;
+  gap: 5px;
+  color: #666;
+  transition: all 0.2s ease;
 }
 
-.like-btn:hover,
+.like-btn:hover {
+  color: #ff4b4b;
+}
+
 .like-btn.liked {
-  color: #dc3545;
+  color: #ff4b4b;
+}
+
+.like-btn i.liked {
+  animation: likeAnimation 0.3s ease;
+}
+
+@keyframes likeAnimation {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
 /* Responsive Design */

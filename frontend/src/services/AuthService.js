@@ -28,6 +28,24 @@ class AuthService {
   getRole() {
     return this.role;
   }
+
+  // Get current user information from the token
+  getCurrentUser() {
+    if (!this.accessToken) {
+      return null;
+    }
+    try {
+      const decodedToken = jwtDecode(this.accessToken);
+      return {
+        _id: decodedToken.id,
+        email: decodedToken.email,
+        role: decodedToken.role
+      };
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
 }
 
 const authService = new AuthService();

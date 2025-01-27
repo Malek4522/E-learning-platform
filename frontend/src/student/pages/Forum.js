@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import useProtectedRequest from '../../hooks/useProtectedRequest';
+import authService from '../../services/AuthService';
 import '../styles/Forum.css';
 
 function Forum() {
@@ -10,6 +11,7 @@ function Forum() {
   const [newComment, setNewComment] = useState('');
   const [selectedPost, setSelectedPost] = useState(null);
   const [forum, setForum] = useState(null);
+  const currentUserId = authService.getCurrentUser()?._id;
 
   // Initialize API requests
   const { makeRequest: getForum } = useProtectedRequest(`/api/v1/forums/${courseId}`, 'GET');
@@ -76,6 +78,10 @@ function Forum() {
     }
   };
 
+  const hasUserLikedPost = (post) => {
+    return post.likes.some(like => like === currentUserId || like._id === currentUserId);
+  };
+
   if (!forum) {
     return <div className="loading">Loading forum...</div>;
   }
@@ -134,10 +140,10 @@ function Forum() {
             <div className="post-meta">
               <span className="author">By {selectedPost.author_id.email}</span>
               <button 
-                className={`like-btn ${selectedPost.likes.includes('current_user') ? 'liked' : ''}`}
+                className={`like-btn ${hasUserLikedPost(selectedPost) ? 'liked' : ''}`}
                 onClick={() => handleToggleLike(selectedPost._id)}
               >
-                <i className="fas fa-heart"></i> {selectedPost.likes.length}
+                <i className={`fas fa-heart ${hasUserLikedPost(selectedPost) ? 'liked' : ''}`}></i> {selectedPost.likes.length}
               </button>
             </div>
           </div>
@@ -173,15 +179,23 @@ function Forum() {
       {!selectedPost && forum?.posts && (
         <div className="posts-list">
           {forum.posts.map((post) => (
-            <div key={post._id} className="post-card" onClick={() => setSelectedPost(post)}>
-              <h3>{post.title}</h3>
-              <p>{post.content.substring(0, 150)}...</p>
+            <div key={post._id} className="post-card">
+              <div onClick={() => setSelectedPost(post)}>
+                <h3>{post.title}</h3>
+                <p>{post.content.substring(0, 150)}...</p>
+              </div>
               <div className="post-meta">
                 <span className="author">By {post.author_id.email}</span>
                 <span className="stats">
-                  <span className="likes">
-                    <i className="fas fa-heart"></i> {post.likes.length}
-                  </span>
+                  <button 
+                    className={`like-btn ${hasUserLikedPost(post) ? 'liked' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleLike(post._id);
+                    }}
+                  >
+                    <i className={`fas fa-heart ${hasUserLikedPost(post) ? 'liked' : ''}`}></i> {post.likes.length}
+                  </button>
                   <span className="comments">
                     <i className="fas fa-comment"></i> {post.comments.length}
                   </span>
