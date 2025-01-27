@@ -7,7 +7,7 @@ function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
+    phoneNumber: '',
     subject: '',
     message: ''
   });
@@ -32,7 +32,7 @@ function Contact() {
       const response = await axios.post('http://localhost:5000/api/v1/contacts/', formData);
 
       setSuccessMessage('Thank you for contacting us! We will get back to you soon.');
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' }); // Reset form
+      setFormData({ name: '', email: '', phoneNumber: '', subject: '', message: '' }); // Reset form
     } catch (err) {
       setError('Failed to send message. Please try again later.');
       console.error('Error sending contact form:', err);
@@ -65,13 +65,13 @@ function Contact() {
               />
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="phone">Phone Number</label>
+              <label htmlFor="phoneNumber">Phone Number</label>
               <input
                 type="tel"
-                id="phone"
-                name="phone"
+                id="phoneNumber"
+                name="phoneNumber"
                 placeholder="Enter your phone number"
-                value={formData.phone}
+                value={formData.phoneNumber}
                 onChange={handleChange}
                 required
               />

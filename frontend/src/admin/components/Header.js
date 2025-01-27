@@ -7,7 +7,7 @@ function Header() {
     <div className="admin-app">
       <div className="header">
         <div className="logo">
-          <h1>E-Learning</h1>
+          <h1><a href="/">E-Learning</a></h1>
         </div>
         <div className="header-actions">
           <ProfileDropdown />

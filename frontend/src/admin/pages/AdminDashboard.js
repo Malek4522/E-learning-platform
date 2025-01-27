@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import StudentTable from "../components/StudentTable";
 import InstructorTable from "../components/InstructorTable";
 import Dashboard from "../components/Dashboard";
+import Inbox from "../components/Inbox";
 import "./AdminDashboard.css";
 
 function AdminDashboard() {
@@ -25,6 +26,8 @@ function AdminDashboard() {
         return <StudentTable />;
       case "instructors":
         return <InstructorTable />;
+      case "inbox":
+        return <Inbox />;
       default:
         return <Dashboard />;
     }

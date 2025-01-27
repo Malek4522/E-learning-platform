@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   MdDashboard,
   MdPeople,
+  MdInbox,
 } from "react-icons/md";
 import { GiTeacher } from "react-icons/gi";
 import "../styles/SidebarAdmin.css";
@@ -52,6 +53,13 @@ function Sidebar() {
           >
             <GiTeacher className="sidebar-icon instructor-icon" />
             <span>Instructors</span>
+          </li>
+          <li
+            className={`sidebar-item ${currentSection === "inbox" ? "active" : ""}`}
+            onClick={() => handleNavigation("inbox")}
+          >
+            <MdInbox className="sidebar-icon" />
+            <span>Inbox</span>
           </li>
         </ul>
       </div>

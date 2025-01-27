@@ -1,0 +1,117 @@
+.inbox-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.inbox-container h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.message-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.message-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.message-info h3 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+}
+
+.status-badge[data-status="awaiting"] {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-badge[data-status="responded"] {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.respond-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.respond-button:hover {
+  background-color: #0056b3;
+}
+
+.message-details {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 20px;
+}
+
+.contact-info {
+  color: #666;
+}
+
+.contact-info p {
+  margin: 8px 0;
+}
+
+.message-content {
+  color: #333;
+}
+
+.message-content p {
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+/* Loading and Empty States */
+.no-messages {
+  background: white;
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  color: #666;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.no-messages p {
+  margin: 0;
+  font-size: 16px;
+} 

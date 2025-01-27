@@ -1,18 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import Navbar from './components/Navbar';
 import styles from './CourseCatalog.module.css';
 import logo from '../teacher/assets/images/logo.png';
 
 function CourseCatalog() {
-  const courses = [
-    { id: 1, title: "Basic to Advance Figma", description: "Learn the fundamentals of Figma and design.", duration: "15 hours", lessons: 20, thumbnail: logo },
-    { id: 2, title: "React JS Basic to Advance", description: "Master React from the ground up.", duration: "20 hours", lessons: 25, thumbnail: logo },
-    { id: 3, title: "Mastering JS with Laravel", description: "Build powerful applications with JavaScript and Laravel.", duration: "25 hours", lessons: 30, thumbnail: logo },
-    { id: 4, title: "Python for Data Science", description: "Learn Python and its applications in Data Science.", duration: "30 hours", lessons: 35, thumbnail: logo },
-    { id: 5, title: "Introduction to Machine Learning", description: "Get started with Machine Learning concepts and techniques.", duration: "40 hours", lessons: 40, thumbnail: logo },
-    { id: 6, title: "Web Development with Django", description: "Build robust web applications using Django.", duration: "25 hours", lessons: 28, thumbnail: logo },
-  ];
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get('/api/v1/courses/preview');
+        setCourses(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch courses. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  const handleViewDetails = (e, course) => {
+    e.preventDefault();
+    setSelectedCourse(course);
+    setShowAlert(true);
+  };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+    setSelectedCourse(null);
+  };
+
+  if (loading) return <div className={styles.loading}>Loading courses...</div>;
+  if (error) return <div className={styles.error}>{error}</div>;
 
   return (
     <>
@@ -22,21 +49,61 @@ function CourseCatalog() {
         <div className={styles.courseList}>
           {courses.map(course => (
             <div key={course.id} className={styles.courseCard}>
-              <img src={course.thumbnail} alt={course.title} />
+              <img src={logo} alt={course.title} />
               <div className={styles.courseInfo}>
                 <h2>{course.title}</h2>
                 <p>{course.description}</p>
                 <div className={styles.courseMeta}>
-                  <span><i className="fas fa-book-open"></i> {course.lessons} Lessons</span>
-                  <span><i className="fas fa-clock"></i> {course.duration}</span>
+                  <span><i className="fas fa-book-open"></i> {course.totalLessons} Lessons</span>
+                  <span><i className="fas fa-clock"></i> {Math.floor(course.totalDuration / 60)} hours</span>
                 </div>
-                <Link to={`/course/${course.id}`}>
+                <div className={styles.categories}>
+                  {course.categories.map((category, index) => (
+                    <span key={index} className={styles.category}>{category}</span>
+                  ))}
+                </div>
+                <Link to={`/course/${course.id}`} onClick={(e) => handleViewDetails(e, course)}>
                   <button className={styles.enrollButton}>View Details</button>
                 </Link>
               </div>
             </div>
           ))}
         </div>
+
+        {showAlert && selectedCourse && (
+          <div className={styles.alertOverlay} onClick={handleCloseAlert}>
+            <div className={styles.alertContent} onClick={e => e.stopPropagation()}>
+              <button className={styles.closeButton} onClick={handleCloseAlert}>×</button>
+              <h3>{selectedCourse.title}</h3>
+              <div className={styles.alertTeacherInfo}>
+                <h4>Teacher Information:</h4>
+                {selectedCourse.teacher.profile.first_name && (
+                  <p><strong>First Name:</strong> {selectedCourse.teacher.profile.first_name}</p>
+                )}
+                {selectedCourse.teacher.profile.last_name && (
+                  <p><strong>Last Name:</strong> {selectedCourse.teacher.profile.last_name}</p>
+                )}
+                {selectedCourse.teacher.email && (
+                  <p><strong>Email:</strong> {selectedCourse.teacher.email}</p>
+                )}
+                {selectedCourse.teacher.profile.bio && (
+                  <div className={styles.teacherBio}>
+                    <strong>Bio:</strong>
+                    <p>{selectedCourse.teacher.profile.bio}</p>
+                  </div>
+                )}
+              </div>
+              <div className={styles.alertChapters}>
+                <h4>Course Chapters:</h4>
+                <ul>
+                  {selectedCourse.chapterTitles.map((chapter, index) => (
+                    <li key={index}>{chapter}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

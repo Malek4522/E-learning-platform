@@ -64,16 +64,24 @@
 
 .courseMeta {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  margin-bottom: 0.8rem; /* Slightly reduced spacing */
+  margin-bottom: 0.8rem;
   color: #666;
+  padding: 0.5rem 0;
 }
 
 .courseMeta span {
   display: flex;
   align-items: center;
-  gap: 0.4rem; /* Reduced spacing between items */
+  gap: 0.4rem;
+  padding: 0.3rem;
+  margin: 0.2rem 0;
+}
+
+.courseMeta i {
+  margin-right: 0.3rem;
 }
 
 .enrollButton {
@@ -89,4 +97,146 @@
 
 .enrollButton:hover {
   background: #e91e63; /* Darker pink */
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #dc3545;
+}
+
+.teacherInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.teacherAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.category {
+  background-color: #e9ecef;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.875rem;
+  color: #495057;
+}
+
+.alertOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.alertContent {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  padding: 0.5rem;
+  line-height: 1;
+}
+
+.closeButton:hover {
+  color: #e91e63;
+}
+
+.alertContent h3 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-right: 2rem;
+}
+
+.alertTeacherInfo, .alertChapters {
+  margin-bottom: 1.5rem;
+}
+
+.alertTeacherInfo h4, .alertChapters h4 {
+  color: #2c3e50;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+}
+
+.alertTeacherInfo p {
+  color: #34495e;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.teacherBio {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.teacherBio strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.teacherBio p {
+  margin: 0;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.alertChapters ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.alertChapters li {
+  color: #34495e;
+  padding: 0.5rem;
+  margin: 0.3rem 0;
+  background: #f8f9fa;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.alertChapters li:hover {
+  background: #e9ecef;
 }

@@ -198,7 +198,7 @@ exports.CoursesPreview = async (req, res) => {
     try {
         const courses = await Course.find()
             .populate('teacher_id', 'email profile')
-            .select('title description categories chapters.title chapters.lessons.duration');
+            .select('title description categories chapters.chapter_title chapters.lessons.content.video.duration');
         
         // Prepare preview response for each course
         const coursePreviews = courses.map(course => {
@@ -208,7 +208,7 @@ exports.CoursesPreview = async (req, res) => {
             const totalDuration = course.chapters.reduce((acc, chapter) => {
                 if (!chapter.lessons) return acc;
                 return acc + chapter.lessons.reduce((lessonAcc, lesson) => 
-                    lessonAcc + (lesson.duration || 0), 0);
+                    lessonAcc + (lesson.content?.video?.duration || 0), 0);
             }, 0);
 
             return {
@@ -220,7 +220,7 @@ exports.CoursesPreview = async (req, res) => {
                 totalChapters: course.chapters.length,
                 totalLessons: totalLessons,
                 totalDuration: totalDuration,
-                chapterTitles: course.chapters.map(chapter => chapter.title)
+                chapterTitles: course.chapters.map(chapter => chapter.chapter_title)
             };
         });
         
