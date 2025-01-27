@@ -7,10 +7,11 @@ import '../styles/Forum.css';
 function Forum() {
   const { courseId } = useParams();
   const navigate = useNavigate();
-  const [newPost, setNewPost] = useState({ title: '', content: '', image_url: '' });
+  const [newPost, setNewPost] = useState({ title: '', content: '' });
   const [newComment, setNewComment] = useState('');
   const [selectedPost, setSelectedPost] = useState(null);
   const [forum, setForum] = useState(null);
+  const [isNewPostModalOpen, setIsNewPostModalOpen] = useState(false);
   const currentUserId = authService.getCurrentUser()?._id;
 
   // Initialize API requests
@@ -37,7 +38,8 @@ function Forum() {
     try {
       const data = await createPost(newPost);
       setForum(data);
-      setNewPost({ title: '', content: '', image_url: '' });
+      setNewPost({ title: '', content: '' });
+      setIsNewPostModalOpen(false);
     } catch (error) {
       console.error('Error creating post:', error);
     }
@@ -94,39 +96,46 @@ function Forum() {
           <button className="back-to-course-btn" onClick={() => navigate(`/student/courses/${courseId}`)}>
             <i className="fas fa-arrow-left"></i> Back to Course
           </button>
-          <button className="new-post-btn" onClick={() => setSelectedPost(null)}>
+          <button className="new-post-btn" onClick={() => setIsNewPostModalOpen(true)}>
             <i className="fas fa-plus"></i> New Post
           </button>
         </div>
       </div>
 
-      {!selectedPost ? (
-        <div className="new-post-form">
-          <h2>Create New Post</h2>
-          <form onSubmit={handleCreatePost}>
-            <input
-              type="text"
-              placeholder="Post Title"
-              value={newPost.title}
-              onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
-              required
-            />
-            <textarea
-              placeholder="Post Content"
-              value={newPost.content}
-              onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
-              required
-            />
-            <input
-              type="url"
-              placeholder="Image URL (optional)"
-              value={newPost.image_url}
-              onChange={(e) => setNewPost({ ...newPost, image_url: e.target.value })}
-            />
-            <button type="submit">Create Post</button>
-          </form>
+      {/* New Post Modal */}
+      {isNewPostModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h2>Create New Post</h2>
+              <button className="close-modal-btn" onClick={() => setIsNewPostModalOpen(false)}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            <form onSubmit={handleCreatePost}>
+              <input
+                type="text"
+                placeholder="Post Title"
+                value={newPost.title}
+                onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
+                required
+              />
+              <textarea
+                placeholder="Write your post content here..."
+                value={newPost.content}
+                onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
+                required
+              />
+              <div className="modal-footer">
+                <button type="button" className="cancel-btn" onClick={() => setIsNewPostModalOpen(false)}>Cancel</button>
+                <button type="submit" className="submit-btn">Create Post</button>
+              </div>
+            </form>
+          </div>
         </div>
-      ) : (
+      )}
+
+      {selectedPost ? (
         <div className="post-details">
           <button className="back-btn" onClick={() => setSelectedPost(null)}>
             <i className="fas fa-arrow-left"></i> Back to Posts
@@ -134,9 +143,6 @@ function Forum() {
           <div className="post">
             <h2>{selectedPost.title}</h2>
             <p className="post-content">{selectedPost.content}</p>
-            {selectedPost.image_url && (
-              <img src={selectedPost.image_url} alt="Post" className="post-image" />
-            )}
             <div className="post-meta">
               <span className="author">By {selectedPost.author_id.email}</span>
               <button 
@@ -174,11 +180,9 @@ function Forum() {
             </div>
           </div>
         </div>
-      )}
-
-      {!selectedPost && forum?.posts && (
+      ) : (
         <div className="posts-list">
-          {forum.posts.map((post) => (
+          {forum?.posts.map((post) => (
             <div key={post._id} className="post-card">
               <div onClick={() => setSelectedPost(post)}>
                 <h3>{post.title}</h3>
