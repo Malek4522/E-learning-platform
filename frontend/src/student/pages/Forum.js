@@ -19,6 +19,7 @@ function Forum() {
   const { makeRequest: createPost } = useProtectedRequest(`/api/v1/forums/${courseId}/posts`, 'POST');
   const { makeRequest: addComment } = useProtectedRequest(null, 'POST');
   const { makeRequest: togglePostLike } = useProtectedRequest(null, 'POST');
+  const { makeRequest: toggleCommentLike } = useProtectedRequest(null, 'POST');
 
   // Fetch forum data
   useEffect(() => {
@@ -82,6 +83,25 @@ function Forum() {
 
   const hasUserLikedPost = (post) => {
     return post.likes.some(like => like === currentUserId || like._id === currentUserId);
+  };
+
+  const hasUserLikedComment = (comment) => {
+    return comment.likes.some(like => like === currentUserId || like._id === currentUserId);
+  };
+
+  const handleToggleCommentLike = async (postId, commentId) => {
+    try {
+      const data = await toggleCommentLike(
+        null,
+        `/api/v1/forums/${courseId}/posts/${postId}/comments/${commentId}/like`
+      );
+      setForum(data);
+      if (selectedPost?._id === postId) {
+        setSelectedPost(data.posts.find(p => p._id === postId));
+      }
+    } catch (error) {
+      console.error('Error toggling comment like:', error);
+    }
   };
 
   if (!forum) {
@@ -170,10 +190,17 @@ function Forum() {
                 <div key={comment._id} className="comment">
                   <p>{comment.content}</p>
                   <div className="comment-meta">
-                    <span className="author">{comment.author_id.email}</span>
-                    <span className="likes">
-                      <i className="fas fa-heart"></i> {comment.likes.length}
+                    <span className="author">
+                      {comment.author_id?.email || comment.author_id?.name || 'Anonymous'}
                     </span>
+                    <button 
+                      className={`like-btn ${hasUserLikedComment(comment) ? 'liked' : ''}`}
+                      onClick={() => handleToggleCommentLike(selectedPost._id, comment._id)}
+                      title={hasUserLikedComment(comment) ? 'Unlike' : 'Like'}
+                    >
+                      <i className={`fas fa-heart ${hasUserLikedComment(comment) ? 'liked' : ''}`}></i>
+                      <span className="like-count">{comment.likes.length}</span>
+                    </button>
                   </div>
                 </div>
               ))}

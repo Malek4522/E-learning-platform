@@ -35,7 +35,9 @@ commentSchema.methods.toggleLike = async function(userId) {
     this.likes.splice(likeIndex, 1);
   }
 
-  return this.parent().save();
+  // Get the parent forum document and save it
+  const forum = this.ownerDocument();
+  return forum.save();
 };
 
 
@@ -86,7 +88,9 @@ postSchema.methods.toggleLike = async function(userId) {
     this.likes.splice(likeIndex, 1);
   }
 
-  return this.parent().save();
+  // Get the parent forum document and save it
+  const forum = this.ownerDocument();
+  return forum.save();
 };
 
 

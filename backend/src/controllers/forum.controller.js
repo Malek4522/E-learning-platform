@@ -116,7 +116,6 @@ exports.toggleCommentLike = async (req, res) => {
         if (!comment) {
             return res.status(404).json({ message: 'Comment not found' });
         }
-
         await comment.toggleLike(req.user.id);
         res.json(forum);
     } catch (error) {
