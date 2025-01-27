@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams} from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "../styles/CourseDetails.css";
 import useProtectedRequest from "../../hooks/useProtectedRequest";
 
 function CourseDetails() {
   const { courseId } = useParams();
+  const navigate = useNavigate();
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [selectedContent, setSelectedContent] = useState(null);
   const [quizAnswers, setQuizAnswers] = useState({});
@@ -165,6 +166,21 @@ function CourseDetails() {
     <div className="course-details-page">
       <div className="course-header">
         <h1>{course.title}</h1>
+        <button 
+          className="forum-btn" 
+          onClick={() => navigate(`/student/forum/${courseId}`)}
+          style={{ 
+            padding: '8px 16px', 
+            marginBottom: '15px', 
+            backgroundColor: '#007bff', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '4px', 
+            cursor: 'pointer' 
+          }}
+        >
+          Go to Course Forum
+        </button>
         <div className="course-stats">
           <span>
             <i className="fas fa-book-open"></i> {course.chapters.reduce((total, chapter) => total + chapter.lessons.length, 0)} Lessons

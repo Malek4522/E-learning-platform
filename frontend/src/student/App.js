@@ -7,7 +7,7 @@ import Grades from "./pages/Grades";
 import Profile from "./pages/Profile";
 import Studentcourses from "./pages/student_courses";
 import CourseDetails from "./pages/CourseDetails";
-
+import Forum from "./pages/Forum";
 function StudentApp() {
   return (
     <Routes>
@@ -18,6 +18,7 @@ function StudentApp() {
         <Route path="profile" element={<Profile />} />
         <Route path="courses" element={<Studentcourses />} />
         <Route path="courses/:courseId" element={<CourseDetails />} />
+        <Route path="forum/:courseId" element={<Forum />} />
       </Route>
     </Routes>
   );
