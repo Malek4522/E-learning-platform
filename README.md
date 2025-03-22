@@ -12,11 +12,11 @@ Welcome to the E-learning Platform! This platform provides dashboards for users,
 - **Authentication**: Secure login and registration for users, teachers, and admins.
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-  <img src="frontend/src/assets/images/web3.jpg" width="200">
-  <img src="frontend/src/assets/images/web4.jpg" width="200">
-  <img src="frontend/src/assets/images/web5.jpg" width="200">
-  <img src="frontend/src/assets/images/web6.jpg" width="200">
-  <img src="frontend/src/assets/images/web7.jpg" width="200">
+  <img src="frontend/src/assets/images/web3.jpg" width="400">
+  <img src="frontend/src/assets/images/web4.jpg" width="400">
+  <img src="frontend/src/assets/images/web5.jpg" width="400">
+  <img src="frontend/src/assets/images/web6.jpg" width="400">
+  <img src="frontend/src/assets/images/web7.jpg" width="400">
 </div>
 
 ## Technologies Used
