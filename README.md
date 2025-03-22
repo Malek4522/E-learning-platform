@@ -33,7 +33,7 @@ To get started with the project, clone the repository and install the necessary 
 git clone https://github.com/Malek4522/E-learning-platform.git
 cd E-learning-platform
 # Install dependencies
-
+```
 ##Contact
 
 For any inquiries or support, please contact us at abdmalek69.2004@gmail.com.
